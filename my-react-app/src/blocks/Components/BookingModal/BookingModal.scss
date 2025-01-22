@@ -1,0 +1,36 @@
+.booking-calendar {
+  width: 100%;
+  background: #111111 !important;
+  border: 1px solid #333 !important;
+  border-radius: 0.5rem;
+  padding: 1rem;
+
+  .react-calendar__tile {
+    color: white;
+    
+    &:disabled {
+      background-color: #333 !important;
+      opacity: 0.5;
+    }
+
+    &--now {
+      background: rgba(0, 229, 255, 0.1) !important;
+    }
+
+    &--active {
+      background: rgba(0, 229, 255, 0.5) !important;
+    }
+  }
+
+  .react-calendar__navigation button {
+    color: white;
+    
+    &:disabled {
+      background-color: transparent !important;
+    }
+  }
+
+  .react-calendar__month-view__weekdays {
+    color: #888;
+  }
+} 
