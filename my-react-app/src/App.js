@@ -86,7 +86,7 @@ function App() {
           : 'opacity-0 translate-y-20'}`}>
         <FadeContent 
           blur={true} 
-          duration={1000} 
+          duration={300} 
           easing="ease-in-out" 
           initialOpacity={0}
           show={showMainContent}>

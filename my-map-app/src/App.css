@@ -1,0 +1,41 @@
+.app {
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  position: relative;
+}
+
+.map-toggle {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+  display: flex;
+  background-color: white;
+  border-radius: 4px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+}
+
+.map-toggle button {
+  padding: 10px 15px;
+  border: none;
+  background-color: white;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.map-toggle button:first-child {
+  border-right: 1px solid #eee;
+}
+
+.map-toggle button.active {
+  background-color: #007bff;
+  color: white;
+  font-weight: bold;
+}
+
+.map-toggle button:hover:not(.active) {
+  background-color: #f0f0f0;
+} 
