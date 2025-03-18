@@ -1,0 +1,148 @@
+.listings-sidebar {
+  width: 380px;
+  height: 100vh;
+  background-color: white;
+  overflow-y: auto;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+}
+
+.listings-header {
+  padding: 20px;
+  border-bottom: 1px solid #f0f0f0;
+  position: sticky;
+  top: 0;
+  background: white;
+  z-index: 10;
+}
+
+.listings-header h2 {
+  margin: 0 0 8px 0;
+  font-size: 22px;
+  font-weight: 600;
+  color: #222;
+}
+
+.listings-header p {
+  margin: 0;
+  color: #717171;
+  font-size: 14px;
+}
+
+.listings-container {
+  flex: 1;
+  padding: 0 20px 20px 20px;
+}
+
+.listing-card {
+  margin: 20px 0;
+  padding: 16px;
+  border-radius: 12px;
+  border: 1px solid #f0f0f0;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.listing-card:hover, .listing-card.active {
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.1);
+  border-color: #ddd;
+  transform: translateY(-2px);
+}
+
+.listing-card.active {
+  border-color: #FF385C;
+}
+
+.listing-image {
+  width: 100%;
+  height: 180px;
+  background-color: #f7f7f7;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+
+.placeholder-image {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 60px;
+  background-color: #e8f4f8;
+}
+
+.listing-content h3 {
+  margin: 0 0 8px 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #222;
+}
+
+.listing-description {
+  color: #717171;
+  font-size: 14px;
+  margin: 0 0 12px 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.listing-location {
+  color: #717171;
+  font-size: 14px;
+  margin: 0 0 16px 0;
+}
+
+.booking-button {
+  background-color: #FF385C;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  width: 100%;
+  font-size: 14px;
+}
+
+.booking-button:hover {
+  background-color: #E31C5F;
+}
+
+.no-listings {
+  padding: 40px 0;
+  text-align: center;
+  color: #717171;
+}
+
+.no-listings p {
+  margin: 8px 0;
+}
+
+/* Responsive styles for smaller screens */
+@media (max-width: 1024px) {
+  .listings-sidebar {
+    width: 340px;
+  }
+}
+
+@media (max-width: 768px) {
+  .listings-sidebar {
+    width: 100%;
+    height: 50vh;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    z-index: 1000;
+    border-radius: 20px 20px 0 0;
+  }
+  
+  .listing-image {
+    height: 140px;
+  }
+} 

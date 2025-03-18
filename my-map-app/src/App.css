@@ -3,6 +3,7 @@
   height: 100vh;
   overflow: hidden;
   position: relative;
+  display: flex;
 }
 
 .map-toggle {
@@ -38,4 +39,21 @@
 
 .map-toggle button:hover:not(.active) {
   background-color: #f0f0f0;
+}
+
+.map-section {
+  flex: 1;
+  height: 100vh;
+  position: relative;
+}
+
+/* Mobile responsive styles */
+@media (max-width: 768px) {
+  .app {
+    flex-direction: column;
+  }
+  
+  .map-section {
+    height: 50vh;
+  }
 } 
