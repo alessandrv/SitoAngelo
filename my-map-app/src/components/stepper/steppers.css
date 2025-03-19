@@ -1,0 +1,75 @@
+.stepper {
+    position: fixed; /* Posiziona il Stepper sopra tutto il resto */
+    top: 50%; /* Posiziona il contenuto verticalmente al centro */
+    left: 50%; /* Posiziona il contenuto orizzontalmente al centro */
+    transform: translate(-50%, -50%); /* Centra esattamente il contenuto */
+    background-color: #fff; /* Sfondo bianco per il Stepper */
+    padding: 2rem;
+    width: 90%; /* Larghezza del contenitore */
+    max-width: 600px; /* Limite massimo per la larghezza */
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    z-index: 9999; /* Assicurati che il Stepper si trovi sopra agli altri contenuti */
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .step-content {
+    margin-bottom: 2rem;
+  }
+  
+  .stepper-footer {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 24px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #ff4c4c;
+    font-weight: bold;
+  }
+  
+  .close-button:hover {
+    color: #ff0000;
+  }
+  
+  button {
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  button:hover {
+    background-color: #00aaff;
+    color: white;
+  }
+  
+  button:disabled {
+    background-color: #ddd;
+    cursor: not-allowed;
+  }
+  
+  .back-button {
+    background-color: #ff4c4c;
+    color: white;
+  }
+  
+  .next-button {
+    background-color: #00aaff;
+    color: white;
+  }
+  
+  .finish-button {
+    background-color: #28a745;
+    color: white;
+  }
+  

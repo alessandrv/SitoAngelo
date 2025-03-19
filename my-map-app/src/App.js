@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import MapComponent from './MapComponent';
-import ListingSidebar from './ListingSidebar';
-import './App.css';
+import React, { useState } from "react";
+import MapComponent from "./MapComponent";
+import ListingSidebar from "./ListingSidebar";
+import "./App.css";
 
 function App() {
   const [listings, setListings] = useState([]);
@@ -24,22 +24,24 @@ function App() {
   };
 
   return (
-    <div className="app">
-      <ListingSidebar 
-        listings={listings}
-        onListingHover={handleListingHover}
-        onListingClick={handleListingClick}
-        activeListingId={activeListingId}
-      />
-      <div className="map-section">
-        <MapComponent 
-          onListingsChange={handleListingsChange}
-          hoveredListingId={hoveredListingId}
+    <>
+      <div className="app">
+        <ListingSidebar
+          listings={listings}
+          onListingHover={handleListingHover}
+          onListingClick={handleListingClick}
           activeListingId={activeListingId}
         />
+        <div className="map-section">
+          <MapComponent
+            onListingsChange={handleListingsChange}
+            hoveredListingId={hoveredListingId}
+            activeListingId={activeListingId}
+          />
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 
-export default App; 
+export default App;
