@@ -1,20 +1,18 @@
 import React, { useState, useEffect } from "react";
 import "./steppers.css";
 
-// Componente per il passo (Step)
 export function Step({ children }) {
   return <div className="step">{children}</div>;
 }
 
-// Componente Stepper
 export default function Stepper({
   children,
   initialStep = 1,
   onStepChange = () => {},
-  backButtonText = "Back",
+  backButtonText = "Previous",
   nextButtonText = "Next",
   finishButtonText = "Finish",
-  onClose = () => {} // Callback per gestire la chiusura
+  onClose = () => {}
 }) {
   const [currentStep, setCurrentStep] = useState(initialStep);
   const stepsArray = React.Children.toArray(children);
@@ -22,9 +20,7 @@ export default function Stepper({
   const isLastStep = currentStep === totalSteps;
 
   useEffect(() => {
-    // Funzione per rimuovere i dati dal localStorage quando il Stepper è chiuso
     return () => {
-      // Questa funzione viene chiamata quando il componente viene smontato (chiuso)
       localStorage.removeItem("houseForm");
       console.log("localStorage rimosso");
     };
@@ -34,7 +30,7 @@ export default function Stepper({
     if (currentStep < totalSteps) {
       const newStep = currentStep + 1;
       setCurrentStep(newStep);
-      onStepChange(newStep); // Callback per il cambiamento dello step
+      onStepChange(newStep);
     }
   };
 
@@ -42,7 +38,7 @@ export default function Stepper({
     if (currentStep > 1) {
       const newStep = currentStep - 1;
       setCurrentStep(newStep);
-      onStepChange(newStep); // Callback per il cambiamento dello step
+      onStepChange(newStep);
     }
   };
 
@@ -52,38 +48,43 @@ export default function Stepper({
 
   return (
     <div>
-      {/* Overlay per lo sfondo semi-trasparente */}
       <div className="stepper-overlay"></div>
 
       <div className="stepper">
-        {/* Pulsante di chiusura (X) */}
-        <button className="close-button" onClick={onClose}>
-          &times;
-        </button>
-
-        {/* Mostra il contenuto del passo corrente */}
         <div className="step-content">
           {stepsArray[currentStep - 1]}
         </div>
 
-        {/* Navigazione */}
         <div className="stepper-footer">
-          <button
-            onClick={handleBack}
-            disabled={currentStep === 1}
-            className="back-button"
-          >
-            {backButtonText}
-          </button>
-          {isLastStep ? (
-            <button onClick={handleFinish} className="finish-button">
-              {finishButtonText}
+
+          <div className="stepper-nav">
+            <button
+              onClick={handleBack}
+              disabled={currentStep === 1}
+              className="back-button"
+            >
+              {backButtonText}
             </button>
-          ) : (
-            <button onClick={handleNext} className="next-button">
-              {nextButtonText}
-            </button>
-          )}
+            <div className="step-indicators">
+            {Array.from({ length: totalSteps }).map((_, index) => (
+              <div
+                key={index}
+                className={`step-indicator ${currentStep === index + 1 ? 'active' : ''}`}
+              >
+                {index + 1}
+              </div>
+            ))}
+          </div>
+            {isLastStep ? (
+              <button onClick={handleFinish} className="finish-button">
+                {finishButtonText}
+              </button>
+            ) : (
+              <button onClick={handleNext} className="next-button">
+                {nextButtonText}
+              </button>
+            )}
+          </div>
         </div>
       </div>
     </div>

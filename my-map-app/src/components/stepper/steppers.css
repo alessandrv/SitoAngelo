@@ -1,15 +1,9 @@
 .stepper {
-    position: fixed; /* Posiziona il Stepper sopra tutto il resto */
-    top: 50%; /* Posiziona il contenuto verticalmente al centro */
-    left: 50%; /* Posiziona il contenuto orizzontalmente al centro */
-    transform: translate(-50%, -50%); /* Centra esattamente il contenuto */
-    background-color: #fff; /* Sfondo bianco per il Stepper */
-    padding: 2rem;
-    width: 90%; /* Larghezza del contenitore */
-    max-width: 600px; /* Limite massimo per la larghezza */
+    background-color: #fff;
+    width: 100%;
+    height: 100%;
     border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    z-index: 9999; /* Assicurati che il Stepper si trovi sopra agli altri contenuti */
+    z-index: 9999;
     display: flex;
     flex-direction: column;
   }
@@ -17,26 +11,26 @@
   .step-content {
     margin-bottom: 2rem;
   }
+
+  .stepper-nav{
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    gap: 100px;
+    padding: 10px 20px;
+  }
   
   .stepper-footer {
     display: flex;
-    justify-content: space-between;
-  }
-  
-  .close-button {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    font-size: 24px;
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: #ff4c4c;
-    font-weight: bold;
-  }
-  
-  .close-button:hover {
-    color: #ff0000;
+    justify-content: space-evenly;
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: white;
+    padding: 10px 0;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
+    z-index: 999;
   }
   
   button {
@@ -71,5 +65,46 @@
   .finish-button {
     background-color: #28a745;
     color: white;
+  }
+
+  .step-indicators {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+  }
+  
+  .step-indicator {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: #ccc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    color: white;
+    font-weight: bold;
+  }
+  
+  .step-indicator.active {
+    background-color: #007bff;
+  }
+  
+  .stepper-footer .step-number {
+    font-size: 16px;
+    color: #333;
+  }
+  
+  .back-button, .next-button, .finish-button {
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  
+  .back-button:disabled,
+  .next-button:disabled,
+  .finish-button:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
   }
   
