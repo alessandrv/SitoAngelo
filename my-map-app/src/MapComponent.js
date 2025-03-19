@@ -239,7 +239,7 @@ function filterCollidingMarkers(markers, previouslyDisplayed = [], map = null, i
   return result;
 }
 
-const MapComponent = ({ onListingsChange, hoveredListingId, activeListingId }) => {
+const MapComponent = ({ onListingsChange, hoveredListingId, activeListingId, searchQuery, selectedLocation }) => {
   // Fix Leaflet icon issues on component mount
   useEffect(() => {
     fixLeafletIcon();
@@ -247,9 +247,6 @@ const MapComponent = ({ onListingsChange, hoveredListingId, activeListingId }) =
 
   const [center, setCenter] = useState(defaultCoordinates);
   const [shouldUpdateView, setShouldUpdateView] = useState(true);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [searchResults, setSearchResults] = useState([]);
-  const [isSearching, setIsSearching] = useState(false);
   const [customMarkers, setCustomMarkers] = useState([
     {
       position: defaultCoordinates,
@@ -269,15 +266,14 @@ const MapComponent = ({ onListingsChange, hoveredListingId, activeListingId }) =
       description: 'Sleek urban loft with high ceilings and floor-to-ceiling windows. Close to public transit and shopping.',
       id: 'house3'
     },
-    // Add some markers that are very close to each other to test collision detection
     {
-      position: [37.7650, -122.4095], // Very close to Modern Downtown Loft
+      position: [37.7650, -122.4095],
       name: 'Downtown Luxury Condo',
       description: 'Luxurious condominium in the heart of downtown with stunning city views and premium amenities.',
       id: 'house4'
     },
     {
-      position: [37.7651, -122.4093], // Very close to Modern Downtown Loft
+      position: [37.7651, -122.4093],
       name: 'Urban Studio Apartment',
       description: 'Chic studio apartment with modern design. Perfect for young professionals working downtown.',
       id: 'house5'
@@ -285,19 +281,11 @@ const MapComponent = ({ onListingsChange, hoveredListingId, activeListingId }) =
   ]);
   const [visibleMarkers, setVisibleMarkers] = useState([]);
   const [displayedMarkers, setDisplayedMarkers] = useState([]);
-  const [showAddMarkerForm, setShowAddMarkerForm] = useState(false);
-  const [newMarkerData, setNewMarkerData] = useState({
-    name: '',
-    description: ''
-  });
-  const [selectedLocation, setSelectedLocation] = useState(null);
   const [userLocation, setUserLocation] = useState(null);
-  const [isLocating, setIsLocating] = useState(false);
-  const [geoError, setGeoError] = useState(null);
   const mapRef = useRef(null);
   const [mapInstance, setMapInstance] = useState(null);
-  const [collisionGroups, setCollisionGroups] = useState({}); // Track collision groups
-  const [lastSelectedInGroup, setLastSelectedInGroup] = useState({}); // Track last selected marker in each group
+  const [collisionGroups, setCollisionGroups] = useState({});
+  const [lastSelectedInGroup, setLastSelectedInGroup] = useState({});
 
   // Initialize the map reference
   const handleMapCreate = (map) => {
@@ -308,18 +296,13 @@ const MapComponent = ({ onListingsChange, hoveredListingId, activeListingId }) =
   const handleBoundsChange = (newVisibleMarkers, map) => {
     setVisibleMarkers(newVisibleMarkers);
     
-    // Store the map instance for future reference
     if (map && !mapInstance) {
       setMapInstance(map);
     }
     
-    // Use the map instance to calculate collisions with zoom-awareness
     const currentMap = map || mapInstance;
+    const iconSize = 40;
     
-    // Filter colliding markers for display on the map, using the icon size
-    const iconSize = 40; // Size of our house icon in pixels
-    
-    // Use the currently hovered listing ID and last selected marker in each group for stable filtering
     const filteredForDisplay = filterCollidingMarkers(
       newVisibleMarkers, 
       displayedMarkers, 
@@ -328,7 +311,6 @@ const MapComponent = ({ onListingsChange, hoveredListingId, activeListingId }) =
       hoveredListingId || null
     );
     
-    // Extract collision groups from the filtered markers
     const groups = {};
     filteredForDisplay.forEach(marker => {
       if (marker.collisionGroup) {
@@ -337,36 +319,23 @@ const MapComponent = ({ onListingsChange, hoveredListingId, activeListingId }) =
     });
     setCollisionGroups(groups);
     
-    // Apply last selected markers that should persist
     let finalMarkers = [...filteredForDisplay];
     
-    // For each collision group, if we previously selected a marker via hover,
-    // make sure it's still displayed even after hover ends
     Object.entries(lastSelectedInGroup).forEach(([groupKey, selectedId]) => {
       const group = groups[groupKey];
       if (group && !hoveredListingId) {
-        // There's no current hover, but we have a persisting selection for this group
-        
-        // Check if the selected marker is already displayed
         const isDisplayed = finalMarkers.some(m => m.id === selectedId);
         
         if (!isDisplayed && group.includes(selectedId)) {
-          // The persisting marker is not displayed but should be
-          
-          // Find the marker to replace
           const markerToReplace = finalMarkers.find(m => 
             m.collisionGroup && m.collisionGroup.join('_') === groupKey
           );
           
           if (markerToReplace) {
-            // Find the marker data for the selected ID
             const replacementMarker = newVisibleMarkers.find(m => m.id === selectedId);
             
             if (replacementMarker) {
-              // Replace the marker
               finalMarkers = finalMarkers.filter(m => m.id !== markerToReplace.id);
-              
-              // Copy collision group info to the replacement
               replacementMarker.collisionGroup = group;
               finalMarkers.push(replacementMarker);
             }
@@ -377,7 +346,6 @@ const MapComponent = ({ onListingsChange, hoveredListingId, activeListingId }) =
     
     setDisplayedMarkers(finalMarkers);
     
-    // Pass all visible markers to the parent component for the sidebar
     if (onListingsChange) {
       onListingsChange(newVisibleMarkers);
     }
@@ -401,116 +369,14 @@ const MapComponent = ({ onListingsChange, hoveredListingId, activeListingId }) =
     }
   }, [activeListingId, customMarkers]);
 
-  // Locate the user on initial load
+  // Update map when a new location is selected from the header search
   useEffect(() => {
-    locateUser();
-  }, []);
-
-  // Function to get user's geolocation
-  const locateUser = () => {
-    if (!navigator.geolocation) {
-      setGeoError("Geolocation is not supported by your browser");
-      return;
+    if (selectedLocation) {
+      setCenter(selectedLocation);
+      setShouldUpdateView(true);
     }
-    
-    setIsLocating(true);
-    setGeoError(null);
-    
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const { latitude, longitude } = position.coords;
-        setUserLocation([latitude, longitude]);
-        setCenter([latitude, longitude]);
-        setShouldUpdateView(true);
-        setIsLocating(false);
-      },
-      (error) => {
-        setIsLocating(false);
-        switch(error.code) {
-          case error.PERMISSION_DENIED:
-            setGeoError("Location permission denied. Please enable location services.");
-            break;
-          case error.POSITION_UNAVAILABLE:
-            setGeoError("Location information is unavailable.");
-            break;
-          case error.TIMEOUT:
-            setGeoError("Location request timed out.");
-            break;
-          default:
-            setGeoError("An unknown error occurred while getting location.");
-            break;
-        }
-      },
-      {
-        enableHighAccuracy: true,
-        timeout: 10000,
-        maximumAge: 0
-      }
-    );
-  };
+  }, [selectedLocation]);
 
-  // Search for location using Nominatim API
-  const searchLocation = async (e) => {
-    e.preventDefault();
-    
-    if (!searchQuery.trim()) return;
-    
-    setIsSearching(true);
-    
-    try {
-      const response = await fetch(
-        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(searchQuery)}&limit=5`
-      );
-      
-      const data = await response.json();
-      setSearchResults(data);
-    } catch (error) {
-      console.error('Error searching for location:', error);
-      alert('Failed to search for location. Please try again.');
-    } finally {
-      setIsSearching(false);
-    }
-  };
-
-  // Select a location from search results
-  const selectLocation = (result) => {
-    const newCenter = [parseFloat(result.lat), parseFloat(result.lon)];
-    setCenter(newCenter);
-    setShouldUpdateView(true);
-    setSelectedLocation({
-      position: newCenter,
-      display_name: result.display_name
-    });
-    setSearchResults([]);
-    setShowAddMarkerForm(true);
-  };
-
-  // Add a new custom marker
-  const addCustomMarker = (e) => {
-    e.preventDefault();
-    
-    if (!selectedLocation || !newMarkerData.name) return;
-    
-    const newMarker = {
-      position: selectedLocation.position,
-      name: newMarkerData.name,
-      description: newMarkerData.description || 'No description provided.',
-      id: Date.now().toString()
-    };
-    
-    setCustomMarkers([...customMarkers, newMarker]);
-    setNewMarkerData({ name: '', description: '' });
-    setShowAddMarkerForm(false);
-    setSelectedLocation(null);
-  };
-
-  // Cancel adding a new marker
-  const cancelAddMarker = () => {
-    setShowAddMarkerForm(false);
-    setNewMarkerData({ name: '', description: '' });
-    setSelectedLocation(null);
-  };
-  
   // Handle marker click
   const handleMarkerClick = (markerId) => {
     // Do not change center on marker click
@@ -519,18 +385,12 @@ const MapComponent = ({ onListingsChange, hoveredListingId, activeListingId }) =
   // Update when a listing is hovered to show hidden colliding markers
   useEffect(() => {
     if (hoveredListingId) {
-      // First, find if this marker is part of a collision group
-      // and if it's not currently displayed
       const isDisplayed = displayedMarkers.some(m => m.id === hoveredListingId);
       
       if (!isDisplayed) {
-        // Find the collision group this marker belongs to
         for (const marker of displayedMarkers) {
           if (marker.collisionGroup && marker.collisionGroup.includes(hoveredListingId)) {
-            // This marker is visible and part of a collision group containing our hovered marker
-            // We need to recalculate which markers to display
             if (mapInstance) {
-              // Update last selected in this group
               setLastSelectedInGroup(prev => ({
                 ...prev,
                 [marker.collisionGroup.join('_')]: hoveredListingId
@@ -545,99 +405,21 @@ const MapComponent = ({ onListingsChange, hoveredListingId, activeListingId }) =
 
   return (
     <div className="map-container">
-      {/* Search bar and form */}
-      <div className="search-container">
-        <form onSubmit={searchLocation} className="search-form">
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search for an address..."
-            className="search-input"
-          />
-          <button type="submit" className="search-button" disabled={isSearching}>
-            {isSearching ? 'Searching...' : 'Search'}
-          </button>
-        </form>
-        
-        {/* Geolocation button */}
-        <div className="geolocation-controls">
-          <button 
-            onClick={locateUser} 
-            className="locate-button"
-            disabled={isLocating}
-          >
-            {isLocating ? 'Locating...' : 'Use My Location'}
-          </button>
-          {geoError && <p className="geo-error">{geoError}</p>}
-        </div>
-        
-        {/* Search results */}
-        {searchResults.length > 0 && (
-          <div className="search-results">
-            <h3>Search Results:</h3>
-            <ul>
-              {searchResults.map((result) => (
-                <li key={result.place_id} onClick={() => selectLocation(result)}>
-                  {result.display_name}
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-        
-        {/* Add marker form */}
-        {showAddMarkerForm && selectedLocation && (
-          <div className="add-marker-form">
-            <h3>Add a House at this Location</h3>
-            <p><strong>Address:</strong> {selectedLocation.display_name}</p>
-            <form onSubmit={addCustomMarker}>
-              <div className="form-group">
-                <label htmlFor="name">House Name:</label>
-                <input
-                  type="text"
-                  id="name"
-                  value={newMarkerData.name}
-                  onChange={(e) => setNewMarkerData({...newMarkerData, name: e.target.value})}
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <label htmlFor="description">Description:</label>
-                <textarea
-                  id="description"
-                  value={newMarkerData.description}
-                  onChange={(e) => setNewMarkerData({...newMarkerData, description: e.target.value})}
-                  rows="3"
-                />
-              </div>
-              <div className="form-buttons">
-                <button type="submit" className="add-button">Add House</button>
-                <button type="button" className="cancel-button" onClick={cancelAddMarker}>Cancel</button>
-              </div>
-            </form>
-          </div>
-        )}
-      </div>
-      
-      {/* Map with markers */}
       <MapContainer
         ref={mapRef}
         center={center}
         zoom={13}
-        style={{ width: '100%', height: '100vh' }}
+        style={{ width: '100%', height: '100%' }}
         whenCreated={handleMapCreate}
       >
         <ChangeMapView center={center} shouldUpdate={shouldUpdateView} />
         <BoundsWatcher onBoundsChange={handleBoundsChange} markers={customMarkers} />
         
-        {/* Minimalist Map Tile Layer - Shows streets, water, and green areas */}
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
           url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
         />
         
-        {/* User location marker */}
         {userLocation && (
           <Marker 
             position={userLocation} 
@@ -652,7 +434,6 @@ const MapComponent = ({ onListingsChange, hoveredListingId, activeListingId }) =
           </Marker>
         )}
         
-        {/* Display non-colliding or randomly selected markers */}
         {displayedMarkers.map((marker) => (
           <DynamicMarker
             key={marker.id}

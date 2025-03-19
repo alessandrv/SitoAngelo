@@ -1,9 +1,15 @@
-.app {
-  width: 100%;
+.app-container {
+  display: flex;
+  flex-direction: column;
   height: 100vh;
+  width: 100%;
+}
+
+.app {
+  flex: 1;
+  display: flex;
   overflow: hidden;
   position: relative;
-  display: flex;
 }
 
 .map-toggle {
@@ -43,7 +49,7 @@
 
 .map-section {
   flex: 1;
-  height: 100vh;
+  height: 100%;
   position: relative;
 }
 
@@ -54,6 +60,6 @@
   }
   
   .map-section {
-    height: 50vh;
+    height: 50%;
   }
 } 
