@@ -53,7 +53,7 @@ export default function Stepper({
   };
 
   return (
-    <div>
+    <div className="stepper-container">
       <div className="stepper-overlay"></div>
 
       <div className="stepper">

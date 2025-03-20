@@ -17,10 +17,6 @@
     justify-content: space-evenly;
     align-items: center;
     gap: 20px;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    background-color: white;
   }
 
   .form{
@@ -40,14 +36,15 @@
   .form-house{
     display: flex;
     flex-direction: column;
-    flex-wrap: wrap;
     justify-content: center;
     align-items: center;
-    gap: 20px;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    background-color: white;
+  }
+
+  .coupleDiv{
+    display: flex;
+    flex-direction: row;
+    gap: 40px;
+    align-items: flex-start;
   }
 
   .formHouse{
@@ -60,23 +57,74 @@
     background-color: white;
   }
 
-  .mainRecup{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
-    border-radius: 8px;
+  .map{
+    height: 400px;
+    width: 100%;
+    border-radius: 20px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    background-color: white;
+  }
+
+  .map:hover{
+    transition: 1s;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6);
+  }
+
+  .map:not(:hover){
+    transition: 1s;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+
+  }
+
+  .mainRecup{
+    position: absolute;
+    top: 0;
+    left: 10px;
+    font-size: 4rem;
+    font-weight: 700;
     text-transform: uppercase;
+    color: #2c3e50;
+    letter-spacing: 2px;
+    padding: 10px 20px;
+    background: linear-gradient(to right, #3498db, #8e44ad);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    z-index: -1;
   }
 
   .titleRecup{
-    font-size: 2rem;
+    font-size: 1.6rem;
     font-weight: 500;
-    color: #495057;
+    color: #333;
     text-align: center;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    letter-spacing: 1px;
+    font-family: 'Helvetica Neue', sans-serif;
+    background: linear-gradient(to right, #3498db, #8e44ad);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-transform: uppercase;
+    padding: 5px 0;
+    position: relative;
+    transition: transform 0.3s ease, color 0.3s ease;
+  }
+
+  .titleRecup::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -5px;
+    height: 4px;
+    background: rgba(0, 0, 0, 0.10);
+    border-radius: 2px;
+  }
+  
+  .titleRecup:hover {
+    transform: translateY(-5px);
+    color: #3498db;
   }
 
   .image-preview-container {
@@ -98,7 +146,7 @@
   }
 
   .image-preview-img{
-    max-width: 250px;
+    max-width: 150px;
     border-radius: 8px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
   }
@@ -122,10 +170,8 @@
     font-size: 1.2rem;
     font-weight: 500;
     color: #495057;
-    text-align: center;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    border-radius: 3px;
-    padding: 10px;
+    text-align: left;
+    margin: 20px;
 
 }
 
@@ -138,19 +184,88 @@
 
 }
 
- .recupPersonal{
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap: 20px;
- }
 
- .recupHouse{
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap: 20px;
- }
+.recupPersonal {
+  max-width: 600px;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  margin: 20px auto;
+  transition: all 0.3s ease;
+}
+
+.recupPersonal p {
+  font-size: 1.2rem;
+  font-weight: 400;
+  color: #333;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.recupPersonal p span {
+  font-weight: 600;
+  color: #495057;
+}
+
+.recupPersonal:hover {
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+  transform: translateY(-3px);
+}
+
+.titleRecap {
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #2c3e50;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+
+.recupHouse {
+  max-width: 600px;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  margin: 20px auto;
+  transition: all 0.3s ease;
+}
+
+.recupHouse p {
+  font-size: 1.2rem;
+  font-weight: 400;
+  color: #333;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.recupHouse p span {
+  font-weight: 600;
+  color: #495057;
+}
+
+.recupHouse:hover {
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+  transform: translateY(-3px);
+}
+
+.form-field{
+  text-align: left;
+  margin-top: 10px;
+  font-size: 1.2rem;
+  font-weight:400;
+}
+
+.form-house{
+  display: flex;
+  justify-content:left;
+  align-items:flex-start
+}
 
   .formHouse > h2{
     font-size: 1.5rem;
@@ -235,24 +350,22 @@
     color: #495057
 }
 
-/* Contenitore dei risultati di ricerca */
 .search-results-dropdown {
     position: absolute;
-    top: 40%; /* Posiziona la lista subito sotto il campo di ricerca */
+    top: 40%;
     left: 0;
     width: 40%;
-    max-height: 300px; /* Imposta un'altezza massima per la lista */
-    overflow-y: auto; /* Aggiungi uno scroll se ci sono troppi risultati */
+    max-height: 300px;
+    overflow-y: auto;
     background-color: white;
     border: 1px solid #ddd;
     border-radius: 5px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    z-index: 9999999999; /* Assicura che la lista si sovrapponga agli altri contenuti */
+    z-index: 9999999999;
     padding: 10px 0;
     margin-top: 5px;
   }
-  
-  /* Stile per ogni singolo risultato */
+ 
   .search-results-dropdown ul {
     list-style-type: none;
     margin: 0;
@@ -267,17 +380,48 @@
     color: #333;
   }
   
-  /* Cambia colore quando si passa sopra un risultato */
   .search-results-dropdown li:hover {
     background-color: #f5f5f5;
-    color: #007bff; /* Colore per il testo al passaggio del mouse */
+    color: #007bff; 
   }
-  
-  /* Testo di caricamento */
+
   .search-results-dropdown p {
     font-size: 14px;
     color: #999;
     padding: 10px;
     text-align: center;
   }
+
+.form-description {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  font-family: 'Arial', sans-serif;
+  color: #333;
+  background-color: #f9f9f9;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  resize: vertical;
+  box-sizing: border-box;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-description:focus {
+  border-color: #4CAF50;
+  box-shadow: 0 0 8px rgba(72, 199, 129, 0.5);
+  outline: none;
+}
+
+.form-description:hover {
+  border-color: #888;
+}
+
+.form-label {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #555;
+  display: block;
+}
+
   

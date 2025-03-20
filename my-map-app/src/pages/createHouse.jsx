@@ -15,11 +15,8 @@ import "./createHouses.css";
 import { FaSearch } from "react-icons/fa";
 
 const CreateHouse = () => {
-  const [name, setName] = useState("");
-  const [lastName, setLastName] = useState("");
   const [address, setAddress] = useState("");
   const [houseNumber, setHouseNumber] = useState("");
-  const [email, setEmail] = useState("");
   const [city, setCity] = useState("");
   const [state, setState] = useState("");
   const [country, setCountry] = useState("");
@@ -39,11 +36,8 @@ const CreateHouse = () => {
   useEffect(() => {
     const savedData = JSON.parse(localStorage.getItem("houseForm"));
     if (savedData) {
-      setName(savedData.name || "");
-      setLastName(savedData.lastName || "");
       setAddress(savedData.address || "");
       setHouseNumber(savedData.houseNumber || "");
-      setEmail(savedData.email || "");
       setCity(savedData.city || "");
       setState(savedData.state || "");
       setCountry(savedData.country || "");
@@ -59,11 +53,8 @@ const CreateHouse = () => {
 
   const saveToLocalStorage = () => {
     const formData = {
-      name,
-      lastName,
       address,
       houseNumber,
-      email,
       city,
       state,
       country,
@@ -91,7 +82,6 @@ const CreateHouse = () => {
   const handleStepChange = (step) => {
     setCurrentStep(step);
   };
-  
 
   const userLocationIcon = L.icon({
     iconUrl: "https://img.icons8.com/color/48/000000/marker--v1.png",
@@ -162,17 +152,16 @@ const CreateHouse = () => {
   const selectLocation = (result) => {
     setSearchResults([]);
     setSearch(result.display_name);
-  
+
     const lat = result.lat;
     const lng = result.lon;
-  
+
     setPosition([lat, lng]);
-  
+
     geocodeAddress(lat, lng, setAddress, setCity, setState, setZip);
-  
+
     handleStepChange(1);
   };
-  
 
   const handleMapClick = (event) => {
     const { lat, lng } = event.latlng;
@@ -230,7 +219,7 @@ const CreateHouse = () => {
                 <MapContainer
                   center={position}
                   zoom={13}
-                  style={{ height: "400px", width: "100%" }}
+                  className="map"
                   onClick={handleMapClick} // Ascolta i click sulla mappa
                 >
                   <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
@@ -240,20 +229,6 @@ const CreateHouse = () => {
                 </MapContainer>
               </div>
               <form className="form">
-                <input
-                  type="text"
-                  placeholder="First Name"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  className="formHouse"
-                />
-                <input
-                  type="text"
-                  placeholder="Last Name"
-                  value={lastName}
-                  onChange={(e) => setLastName(e.target.value)}
-                  className="formHouse"
-                />
                 <input
                   type="text"
                   placeholder="Address"
@@ -266,13 +241,6 @@ const CreateHouse = () => {
                   placeholder="House Number"
                   value={houseNumber}
                   onChange={(e) => setHouseNumber(e.target.value)}
-                  className="formHouse"
-                />
-                <input
-                  type="email"
-                  placeholder="Email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
                   className="formHouse"
                 />
                 <input
@@ -310,47 +278,70 @@ const CreateHouse = () => {
           <Step>
             <h2 className="mainRecup">Informazioni sulla casa</h2>
             <form className="form-house">
-              <input
-                type="text"
-                placeholder="Price"
-                value={price}
-                onChange={(e) => setPrice(e.target.value)}
-                className="formHouse"
-              />
-              <input
-                type="text"
-                placeholder="Bedrooms"
-                value={bedrooms}
-                onChange={(e) => setBedrooms(e.target.value)}
-                className="formHouse"
-              />
-              <input
-                type="text"
-                placeholder="Bathrooms"
-                value={bathrooms}
-                onChange={(e) => setBathrooms(e.target.value)}
-                className="formHouse"
-              />
-              <input
-                type="text"
-                placeholder="Sqft"
-                value={sqft}
-                onChange={(e) => setSqft(e.target.value)}
-                className="formHouse"
-              />
-              <input
-                type="text"
-                placeholder="Description"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                className="formHouse"
-              />
+              <div className="form-field">
+                <label htmlFor="price">Price</label>
+                <input
+                  type="text"
+                  id="price"
+                  placeholder="Enter price"
+                  value={price}
+                  onChange={(e) => setPrice(e.target.value)}
+                  className="formHouse"
+                />
+              </div>
+
+              <div className="form-field">
+                <label htmlFor="bedrooms">Bedrooms</label>
+                <input
+                  type="text"
+                  id="bedrooms"
+                  placeholder="Enter number of bedrooms"
+                  value={bedrooms}
+                  onChange={(e) => setBedrooms(e.target.value)}
+                  className="formHouse"
+                />
+              </div>
+
+              <div className="form-field">
+                <label htmlFor="bathrooms">Bathrooms</label>
+                <input
+                  type="text"
+                  id="bathrooms"
+                  placeholder="Enter number of bathrooms"
+                  value={bathrooms}
+                  onChange={(e) => setBathrooms(e.target.value)}
+                  className="formHouse"
+                />
+              </div>
+
+              <div className="form-field">
+                <label htmlFor="sqft">Sqft</label>
+                <input
+                  type="text"
+                  id="sqft"
+                  placeholder="Enter square footage"
+                  value={sqft}
+                  onChange={(e) => setSqft(e.target.value)}
+                  className="formHouse"
+                />
+              </div>
+
+              <div className="form-field">
+                <label htmlFor="description">Description</label>
+                <textarea
+                  id="description"
+                  placeholder="Enter a description of the house..."
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  className="form-description"
+                />
+              </div>
             </form>
           </Step>
 
           <Step>
-          <h2 className="mainRecup">MOSTRACI LA TUA CASA!</h2>
-              <div className="button-file">
+            <h2 className="mainRecup">MOSTRACI LA TUA CASA!</h2>
+            <div className="button-file">
               <input
                 type="file"
                 accept="image/*"
@@ -362,54 +353,58 @@ const CreateHouse = () => {
               <label htmlFor="file-input" className="custom-file-button">
                 Scegli le immagini
               </label>
-              </div>
+            </div>
 
-              <div>
-                {images.length > 0 && (
-                  <>
-                    <h3 className="mainRecup">Anteprima delle immagini:</h3>
-                    <div className="image-preview-container">
-                      {images.map((image, index) => (
-                        <div key={index} className="image-preview-item">
-                          <img
-                            src={image}
-                            alt={`preview-${index}`}
-                            className="image-preview-img"
-                          />
-                          <MdClose
-                            onClick={() => handleDeleteImage(index)}
-                            className="delete-icon"
-                          />
-                        </div>
-                      ))}
-                    </div>
-                  </>
-                )}
-              </div>
+            <div>
+              {images.length > 0 && (
+                <>
+                  <h3 className="titleRecup">Anteprima delle immagini:</h3>
+                  <div className="image-preview-container">
+                    {images.map((image, index) => (
+                      <div key={index} className="image-preview-item">
+                        <img
+                          src={image}
+                          alt={`preview-${index}`}
+                          className="image-preview-img"
+                        />
+                        <MdClose
+                          onClick={() => handleDeleteImage(index)}
+                          className="delete-icon"
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </>
+              )}
+            </div>
           </Step>
 
           <Step>
-            <h2 className="mainRecup">Recap</h2>
-            <p className="recupText">Ecco cosa hai inserito:</p>
+            <h2 className="mainRecup">Riepilogo</h2>
             <div className="form-house">
-              <h3 className="titleRecup">Informazioni Personali</h3>
-              <div className="recupPersonal">
-                <p className="recupText">
-                  Nome: {name} {lastName}</p>
-                <p className="recupText">Indirizzo: {address} {houseNumber}</p> 
-                <p className="recupText">Email: {email}</p>
-                <p className="recupText">Città: {city}</p>
-                <p className="recupText">Stato: {state}</p>
-                <p className="recupText">Paese: {country}</p>
-                <p className="recupText">CAP: {zip}</p>
-              </div>
-              <h3 className="titleRecup">Informazioni sulla Casa</h3>
-              <div className="recupHouse">
-                <p className="recupText">Prezzo: {price}</p>
-                <p className="recupText">Camere da letto: {bedrooms}</p>
-                <p className="recupText">Bagni: {bathrooms}</p>
-                <p className="recupText">Superficie (Sqft): {sqft}</p>
-                <p className="recupText">Descrizione: {description}</p>
+              <div className="coupleDiv">
+                <div className="">
+                  <h3 className="titleRecup">Informazioni Personali</h3>
+                  <div className="recupPersonal">
+                    <p className="recupText">
+                      Indirizzo: {address} {houseNumber}
+                    </p>
+                    <p className="recupText">Città: {city}</p>
+                    <p className="recupText">Stato: {state}</p>
+                    <p className="recupText">Paese: {country}</p>
+                    <p className="recupText">CAP: {zip}</p>
+                  </div>
+                </div>
+                <div>
+                  <h3 className="titleRecup">Informazioni sulla Casa</h3>
+                  <div className="recupHouse">
+                    <p className="recupText">Prezzo: {price}</p>
+                    <p className="recupText">Camere da letto: {bedrooms}</p>
+                    <p className="recupText">Bagni: {bathrooms}</p>
+                    <p className="recupText">Superficie (Sqft): {sqft}</p>
+                    <p className="recupText">Descrizione: {description}</p>
+                  </div>
+                </div>
               </div>
               <h3 className="titleRecup">Immagini Caricate</h3>
               {images.length > 0 ? (

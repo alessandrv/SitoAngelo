@@ -1,12 +1,51 @@
-.stepper {
-    background-color: #fff;
+.stepper-container{
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: blue;
+    z-index: 999;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .stepper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     width: 100%;
     height: 100%;
     border-radius: 8px;
     z-index: 9999;
-    display: flex;
-    flex-direction: column;
+    position: relative;
   }
+  
+  .stepper::before,
+  .stepper::after {
+    z-index: -1;
+    content: '';
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    background-color: #007bff;
+    border-radius: 50%;
+  }
+
+  .stepper::before {
+    bottom: -15px;
+    left: -15px;
+  }
+  
+  .stepper::after {
+    top: -30px;
+    right: -30px;
+  }
+  
   
   .step-content {
     margin-bottom: 2rem;
