@@ -123,9 +123,9 @@ input {
     align-items: center;
     cursor: pointer;
     transition: box-shadow 0.2s ease;
+    z-index: 2001;
+    position: relative;
 }
-
-
 
 .account-button-content {
     display: flex;
@@ -148,13 +148,27 @@ input {
     top: 100%;
     right: 0;
     margin-top: 8px;
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 2px 16px rgba(0,0,0,0.12);
     width: 240px;
     z-index: 2000;
+    overflow: hidden;
+    border-radius: 12px;
 }
 
+.dropdown-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: white;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.12);
+    z-index: -1;
+}
+
+.account-dropdown-content {
+    position: relative;
+    z-index: 1;
+}
 
 button:hover {
   background-color: #d6d6d6 !important;
@@ -334,24 +348,25 @@ button:hover {
 }
 
 /* Search results dropdown styling */
-.search-results-dropdown {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    max-height: 300px;
-    overflow-y: auto;
-    background-color: white;
-    border-radius: 8px 8px 8px 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-    z-index: 1500;
-    margin-top: 5px;
-    width: 100%;
-    border: 1px solid #ddd;
-    overflow: hidden;
+.search-results-dropdown-header {
+  position: absolute;
+  /* top: 40%; */
+  /* left: 0; */
+  /* width: 40%; */
+  max-height: 300px;
+  overflow-y: auto;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 9999999999;
+  padding: 10px 0;
+  width: 100%;
+  margin-top: 5px;
+  overflow: hidden;
 }
 
-.search-results-dropdown ul {
+.search-results-dropdown-header ul {
     list-style: none;
     padding: 0;
     margin: 0;
@@ -361,7 +376,7 @@ button:hover {
     flex-direction: column;
 }
 
-.search-results-dropdown li {
+.search-results-dropdown-header li {
     padding: 12px 15px;
     border-bottom: 1px solid #eee;
     cursor: pointer;
@@ -371,11 +386,11 @@ button:hover {
     width: 100%;
 }
 
-.search-results-dropdown li:hover {
+.search-results-dropdown-header li:hover {
     background-color: #f5f5f5;
 }
 
-.search-results-dropdown li:last-child {
+.search-results-dropdown-header li:last-child {
     border-bottom: none;
     border-radius: 0 0 8px 8px;
 }

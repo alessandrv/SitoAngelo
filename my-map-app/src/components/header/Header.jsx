@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import './headers.css';
 import { FaSearch, FaUserCircle, FaBars } from 'react-icons/fa';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const Header = ({ onSearch, onLocationSelect }) => {
   const [search, setSearch] = useState('');
@@ -12,6 +13,23 @@ const Header = ({ onSearch, onLocationSelect }) => {
   const searchRef = useRef(null);
   const inputRef = useRef(null);
   const accountMenuRef = useRef(null);
+  const dropdownRef = useRef(null);
+
+  // Get dimensions for the circular animation
+  const useDimensions = (ref) => {
+    const dimensions = useRef({ width: 0, height: 0 });
+
+    useEffect(() => {
+      if (ref.current) {
+        dimensions.current.width = ref.current.offsetWidth;
+        dimensions.current.height = ref.current.offsetHeight;
+      }
+    }, [ref]);
+
+    return dimensions.current;
+  };
+
+  const { height } = useDimensions(dropdownRef);
 
   // Close search results when clicking outside
   useEffect(() => {
@@ -135,6 +153,55 @@ const Header = ({ onSearch, onLocationSelect }) => {
     setAccountMenuOpen(!accountMenuOpen);
   };
 
+  // Animation variants for the dropdown background
+  const dropdownVariants = {
+    open: (height = 1000) => ({
+      clipPath: `circle(${height * 2 + 200}px at calc(100% - 30px) 30px)`,
+      transition: {
+        type: "spring",
+        stiffness: 20,
+        restDelta: 2
+      }
+    }),
+    closed: {
+      clipPath: "circle(0px at calc(100% - 30px) 30px)",
+      transition: {
+        delay: 0.1,
+        type: "spring",
+        stiffness: 400,
+        damping: 40
+      }
+    }
+  };
+
+  // Animation variants for list items
+  const listItemVariants = {
+    open: {
+      y: 0,
+      opacity: 1,
+      transition: {
+        y: { stiffness: 1000, velocity: -100 }
+      }
+    },
+    closed: {
+      y: -50,
+      opacity: 0,
+      transition: {
+        y: { stiffness: 1000 }
+      }
+    }
+  };
+
+  // Animation variants for the navigation list
+  const navVariants = {
+    open: {
+      transition: { staggerChildren: 0.07, delayChildren: 0.2 }
+    },
+    closed: {
+      transition: {  staggerDirection: -1 }
+    }
+  };
+
   return (
     <header className="header-container">
       <div className="logo">
@@ -163,7 +230,7 @@ const Header = ({ onSearch, onLocationSelect }) => {
 
         {/* Search results dropdown */}
         {searchResults.length > 0 && (
-          <div className="search-results-dropdown">
+          <div className="search-results-dropdown-header">
             <ul>
               {searchResults.map((result) => (
                 <li 
@@ -180,7 +247,6 @@ const Header = ({ onSearch, onLocationSelect }) => {
 
       <div className="right-section">
        
-
         {/* Account Menu */}
         <div className="account-menu-container" ref={accountMenuRef}>
           <button 
@@ -194,21 +260,46 @@ const Header = ({ onSearch, onLocationSelect }) => {
             </div>
           </button>
           
-          {accountMenuOpen && (
-            <div className="account-dropdown">
-              <div className="account-dropdown-content">
-                <ul>
-                  <li className="dropdown-header">Account</li>
-                  <li><Link to="/signup">Sign up</Link></li>
-                  <li><Link to="/login">Log in</Link></li>
-                  <li className="divider"></li>
-                  <li><Link to="/host">Host your home</Link></li>
-                  <li><Link to="/host-experience">Host an experience</Link></li>
-                  <li><Link to="/help">Help</Link></li>
-                </ul>
-              </div>
-            </div>
-          )}
+          <AnimatePresence>
+            {accountMenuOpen && (
+              <motion.div 
+                className="account-dropdown"
+                ref={dropdownRef}
+                initial="closed"
+                animate="open"
+                exit="closed"
+                custom={height}
+              >
+                <motion.div 
+                  className="dropdown-background"
+                  variants={dropdownVariants}
+                />
+                <motion.div className="account-dropdown-content">
+                  <motion.ul variants={navVariants}>
+                    <motion.li className="dropdown-header" variants={listItemVariants}>
+                      Account
+                    </motion.li>
+                    <motion.li variants={listItemVariants}>
+                      <Link to="/signup">Sign up</Link>
+                    </motion.li>
+                    <motion.li variants={listItemVariants}>
+                      <Link to="/login">Log in</Link>
+                    </motion.li>
+                    <motion.li className="divider" variants={listItemVariants}></motion.li>
+                    <motion.li variants={listItemVariants}>
+                      <Link to="/host">Host your home</Link>
+                    </motion.li>
+                    <motion.li variants={listItemVariants}>
+                      <Link to="/host-experience">Host an experience</Link>
+                    </motion.li>
+                    <motion.li variants={listItemVariants}>
+                      <Link to="/help">Help</Link>
+                    </motion.li>
+                  </motion.ul>
+                </motion.div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
 
        
