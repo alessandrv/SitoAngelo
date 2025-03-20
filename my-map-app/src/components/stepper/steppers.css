@@ -186,9 +186,9 @@
   .line1 {
     width: 3px;
     height: 100%;
-    top: 50%;
-    left: 10%;
-    transform: rotate(45deg);
+    top: 30%;
+    left: 20%;
+    transform: rotate(-30deg);
     animation: lineMove1 3s ease-in-out infinite;
   }
   
@@ -206,7 +206,7 @@
     height: 500px;
     top: 10%;
     right: 10%;
-    transform: rotate(135deg);
+    transform: rotate(-30deg);
     animation: lineMove3 5s ease-in-out infinite;
   }
 
