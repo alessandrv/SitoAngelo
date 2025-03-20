@@ -51,7 +51,7 @@
 }
 
 .listing-card.active {
-  border-color: #FF385C;
+  border-color: #f5d501;
 }
 
 .listing-image {
@@ -98,7 +98,7 @@
 }
 
 .booking-button {
-  background-color: #FF385C;
+  background-color: #f5d501;
   color: white;
   border: none;
   padding: 8px 16px;
@@ -111,7 +111,7 @@
 }
 
 .booking-button:hover {
-  background-color: #E31C5F;
+  background-color: #d1b502;
 }
 
 .no-listings {

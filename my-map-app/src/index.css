@@ -80,7 +80,7 @@ code {
 }
 
 .leaflet-popup-content button {
-  background-color: #FF385C !important;
+  background-color: #f5d501 !important;
   color: white !important;
   border: none !important;
   padding: 8px 16px !important;
@@ -92,7 +92,7 @@ code {
 }
 
 .leaflet-popup-content button:hover {
-  background-color: #E31C5F !important;
+  background-color: #d1b502 !important;
 }
 
 .leaflet-popup-tip {
