@@ -12,7 +12,7 @@ import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { MdClose } from "react-icons/md";
 import "./createHouses.css";
-import { FaSearch } from "react-icons/fa";
+import { FaSearch, FaChevronUp, FaChevronDown } from "react-icons/fa";
 
 const CreateHouse = () => {
   const [address, setAddress] = useState("");
@@ -190,6 +190,21 @@ const CreateHouse = () => {
     geocodeAddress(lat, lng, setAddress, setCity, setState, setZip);
   };
 
+  // Add handlers for incrementing and decrementing number inputs
+  const handleIncrement = (setter, value, step = 1) => {
+    const numValue = parseFloat(value) || 0;
+    setter((numValue + step).toString());
+  };
+
+  const handleDecrement = (setter, value, step = 1, min = 0) => {
+    const numValue = parseFloat(value) || 0;
+    if (numValue - step >= min) {
+      setter((numValue - step).toString());
+    } else {
+      setter(min.toString());
+    }
+  };
+
   return (
     <div>
       <div className="stepper-container">
@@ -203,38 +218,41 @@ const CreateHouse = () => {
           <Step>
             <h2 className="mainRecup">Informazioni Personali</h2>
             <div className="step-map">
-              <div className="map-search">
-                {/* Barra di ricerca */}
-                <div className="search-bar-form">
-                  <input
-                    type="text"
-                    placeholder="Search for address..."
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
-                  />
-                  <button onClick={handleSearchClick} disabled={isSearching}>
-                    <FaSearch />
-                  </button>
-                </div>
+            <div className="search" >
+        <form className="search-form" onSubmit={(e) => e.preventDefault()}>
+          <input
+            type="text"
+            placeholder="Search for a location..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            autoComplete="off"
+          />
+          <button 
+            onClick={handleSearchClick} 
+            className="searchButton" 
+            disabled={isSearching}
+          >
+            <FaSearch />
+          </button>
+        </form>
 
-                {/* Mostra i risultati della ricerca */}
-                <div>
-                  {isSearching && <p>Searching...</p>}
-                  {searchResults.length > 0 && (
-                    <div className="search-results-dropdown">
-                      <ul>
-                        {searchResults.map((result) => (
-                          <li
-                            key={result.place_id}
-                            onClick={() => selectLocation(result)}
-                          >
-                            {result.display_name}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-                </div>
+        {/* Search results dropdown */}
+        {searchResults.length > 0 && (
+          <div className="search-results-dropdown-header">
+            <ul>
+              {searchResults.map((result) => (
+                <li 
+                  key={result.place_id} 
+                  onClick={() => selectLocation(result)}
+                >
+                  {result.display_name}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+    
+               
 
                 {/* Mappa Leaflet */}
                 <MapContainer
@@ -250,112 +268,206 @@ const CreateHouse = () => {
                 </MapContainer>
               </div>
               <form className="form">
-                <input
-                  type="text"
-                  placeholder="Address"
-                  value={address}
-                  onChange={(e) => setAddress(e.target.value)}
-                  className="formHouse"
-                />
-                <input
-                  type="text"
-                  placeholder="House Number"
-                  value={houseNumber}
-                  onChange={(e) => setHouseNumber(e.target.value)}
-                  className="formHouse"
-                />
-                <input
-                  type="text"
-                  placeholder="City"
-                  value={city}
-                  onChange={(e) => setCity(e.target.value)}
-                  className="formHouse"
-                />
-                <input
-                  type="text"
-                  placeholder="State"
-                  value={state}
-                  onChange={(e) => setState(e.target.value)}
-                  className="formHouse"
-                />
-                <input
-                  type="text"
-                  placeholder="Country"
-                  value={country}
-                  onChange={(e) => setCountry(e.target.value)}
-                  className="formHouse"
-                />
-                <input
-                  type="text"
-                  placeholder="Zip"
-                  value={zip}
-                  onChange={(e) => setZip(e.target.value)}
-                  className="formHouse"
-                />
+                <div className="input-container">
+                  <input
+                    type="text"
+                    placeholder=" "
+                    value={address}
+                    onChange={(e) => setAddress(e.target.value)}
+                    className="formHouse"
+                  />
+                  <span className="floating-label">Address</span>
+                </div>
+                <div className="input-container">
+                  <input
+                    type="text"
+                    placeholder=" "
+                    value={houseNumber}
+                    onChange={(e) => setHouseNumber(e.target.value)}
+                    className="formHouse"
+                  />
+                  <span className="floating-label">House Number</span>
+                </div>
+                <div className="input-container">
+                  <input
+                    type="text"
+                    placeholder=" "
+                    value={city}
+                    onChange={(e) => setCity(e.target.value)}
+                    className="formHouse"
+                  />
+                  <span className="floating-label">City</span>
+                </div>
+                <div className="input-container">
+                  <input
+                    type="text"
+                    placeholder=" "
+                    value={state}
+                    onChange={(e) => setState(e.target.value)}
+                    className="formHouse"
+                  />
+                  <span className="floating-label">State</span>
+                </div>
+                <div className="input-container">
+                  <input
+                    type="text"
+                    placeholder=" "
+                    value={country}
+                    onChange={(e) => setCountry(e.target.value)}
+                    className="formHouse"
+                  />
+                  <span className="floating-label">Country</span>
+                </div>
+                <div className="input-container">
+                  <input
+                    type="text"
+                    placeholder=" "
+                    value={zip}
+                    onChange={(e) => setZip(e.target.value)}
+                    className="formHouse"
+                  />
+                  <span className="floating-label">Zip</span>
+                </div>
               </form>
             </div>
           </Step>
 
           <Step>
             <h2 className="mainRecup">Informazioni sulla casa</h2>
-            <form className="form-house">
-              <div className="form-field">
-                <label htmlFor="price">Price</label>
-                <input
-                  type="text"
-                  id="price"
-                  placeholder="Enter price"
-                  value={price}
-                  onChange={(e) => setPrice(e.target.value)}
-                  className="formHouse"
-                />
+            <form className="form">
+              {/* Price input with horizontal increment/decrement buttons */}
+              <div className="horizontal-number-input">
+                <label className="input-label">Price</label>
+                <div className="input-control">
+                  <button 
+                    type="button" 
+                    className="number-button minus" 
+                    onClick={() => handleDecrement(setPrice, price, 100)}
+                    aria-label="Decrease price"
+                  >
+                    <FaChevronDown />
+                  </button>
+                  <input
+                    type="number"
+                    id="price"
+                    placeholder="0"
+                    value={price}
+                    onChange={(e) => setPrice(e.target.value)}
+                    className="value-input"
+                  />
+                  <button 
+                    type="button" 
+                    className="number-button plus" 
+                    onClick={() => handleIncrement(setPrice, price, 100)}
+                    aria-label="Increase price"
+                  >
+                    <FaChevronUp />
+                  </button>
+                </div>
               </div>
-
-              <div className="form-field">
-                <label htmlFor="bedrooms">Bedrooms</label>
-                <input
-                  type="text"
-                  id="bedrooms"
-                  placeholder="Enter number of bedrooms"
-                  value={bedrooms}
-                  onChange={(e) => setBedrooms(e.target.value)}
-                  className="formHouse"
-                />
+              
+              {/* Bedrooms input with horizontal increment/decrement buttons */}
+              <div className="horizontal-number-input">
+                <label className="input-label">Bedrooms</label>
+                <div className="input-control">
+                  <button 
+                    type="button" 
+                    className="number-button minus" 
+                    onClick={() => handleDecrement(setBedrooms, bedrooms, 1)}
+                    aria-label="Decrease bedrooms"
+                  >
+                    <FaChevronDown />
+                  </button>
+                  <input
+                    type="number"
+                    id="bedrooms"
+                    placeholder="0"
+                    value={bedrooms}
+                    onChange={(e) => setBedrooms(e.target.value)}
+                    className="value-input"
+                  />
+                  <button 
+                    type="button" 
+                    className="number-button plus" 
+                    onClick={() => handleIncrement(setBedrooms, bedrooms, 1)}
+                    aria-label="Increase bedrooms"
+                  >
+                    <FaChevronUp />
+                  </button>
+                </div>
               </div>
-
-              <div className="form-field">
-                <label htmlFor="bathrooms">Bathrooms</label>
-                <input
-                  type="text"
-                  id="bathrooms"
-                  placeholder="Enter number of bathrooms"
-                  value={bathrooms}
-                  onChange={(e) => setBathrooms(e.target.value)}
-                  className="formHouse"
-                />
+              
+              {/* Bathrooms input with horizontal increment/decrement buttons */}
+              <div className="horizontal-number-input">
+                <label className="input-label">Bathrooms</label>
+                <div className="input-control">
+                  <button 
+                    type="button" 
+                    className="number-button minus" 
+                    onClick={() => handleDecrement(setBathrooms, bathrooms, 1)}
+                    aria-label="Decrease bathrooms"
+                  >
+                    <FaChevronDown />
+                  </button>
+                  <input
+                    type="number"
+                    id="bathrooms"
+                    placeholder="0"
+                    value={bathrooms}
+                    onChange={(e) => setBathrooms(e.target.value)}
+                    className="value-input"
+                  />
+                  <button 
+                    type="button" 
+                    className="number-button plus" 
+                    onClick={() => handleIncrement(setBathrooms, bathrooms, 1)}
+                    aria-label="Increase bathrooms"
+                  >
+                    <FaChevronUp />
+                  </button>
+                </div>
               </div>
-
-              <div className="form-field">
-                <label htmlFor="sqft">Sqft</label>
-                <input
-                  type="text"
-                  id="sqft"
-                  placeholder="Enter square footage"
-                  value={sqft}
-                  onChange={(e) => setSqft(e.target.value)}
-                  className="formHouse"
-                />
+              
+              {/* Square Footage input with horizontal increment/decrement buttons */}
+              <div className="horizontal-number-input">
+                <label className="input-label">Square Footage</label>
+                <div className="input-control">
+                  <button 
+                    type="button" 
+                    className="number-button minus" 
+                    onClick={() => handleDecrement(setSqft, sqft, 50)}
+                    aria-label="Decrease square footage"
+                  >
+                    <FaChevronDown />
+                  </button>
+                  <input
+                    type="number"
+                    id="sqft"
+                    placeholder="0"
+                    value={sqft}
+                    onChange={(e) => setSqft(e.target.value)}
+                    className="value-input"
+                  />
+                  <button 
+                    type="button" 
+                    className="number-button plus" 
+                    onClick={() => handleIncrement(setSqft, sqft, 50)}
+                    aria-label="Increase square footage"
+                  >
+                    <FaChevronUp />
+                  </button>
+                </div>
               </div>
-
-              <div className="form-field">
-                <label htmlFor="description">Description</label>
+              
+              <div className="textarea-container">
                 <textarea
                   id="description"
-                  placeholder="Enter a description of the house..."
+                  placeholder=" "
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   className="form-description"
                 />
+                <span className="floating-label">Description of the house</span>
               </div>
             </form>
           </Step>
