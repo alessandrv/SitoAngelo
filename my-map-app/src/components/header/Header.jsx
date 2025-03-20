@@ -1,21 +1,27 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import './headers.css';
-import { FaSearch } from 'react-icons/fa';
+import { FaSearch, FaUserCircle, FaBars } from 'react-icons/fa';
 
 const Header = ({ onSearch, onLocationSelect }) => {
   const [search, setSearch] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [accountMenuOpen, setAccountMenuOpen] = useState(false);
   const searchRef = useRef(null);
   const inputRef = useRef(null);
+  const accountMenuRef = useRef(null);
 
   // Close search results when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (searchRef.current && !searchRef.current.contains(event.target)) {
         setSearchResults([]);
+      }
+      
+      if (accountMenuRef.current && !accountMenuRef.current.contains(event.target)) {
+        setAccountMenuOpen(false);
       }
     };
 
@@ -125,6 +131,10 @@ const Header = ({ onSearch, onLocationSelect }) => {
     setMenuOpen(!menuOpen);
   };
 
+  const toggleAccountMenu = () => {
+    setAccountMenuOpen(!accountMenuOpen);
+  };
+
   return (
     <header className="header-container">
       <div className="logo">
@@ -132,7 +142,7 @@ const Header = ({ onSearch, onLocationSelect }) => {
       </div>
 
       <div className="search" ref={searchRef}>
-        <form onSubmit={(e) => e.preventDefault()}>
+        <form className="search-form" onSubmit={(e) => e.preventDefault()}>
           <input
             ref={inputRef}
             type="text"
@@ -168,26 +178,53 @@ const Header = ({ onSearch, onLocationSelect }) => {
         )}
       </div>
 
-      <nav className={`nav-menu ${menuOpen ? 'active' : ''}`}>
-        <ul>
-          <li><Link to="/">Home</Link></li>
-          <li><Link to="/about">About</Link></li>
-          <li><Link to="/contact">Contact</Link></li>
-        </ul>
-      </nav>
+      <div className="right-section">
+       
 
-      <div className="hamburger-menu" onClick={toggleMenu}>
-        <div className="bar"></div>
-        <div className="bar"></div>
-        <div className="bar"></div>
-      </div>
+        {/* Account Menu */}
+        <div className="account-menu-container" ref={accountMenuRef}>
+          <button 
+            className="account-button" 
+            onClick={toggleAccountMenu}
+            aria-label="Open account menu"
+          >
+            <div className="account-button-content">
+              <FaBars className="menu-icon" />
+              <FaUserCircle className="user-icon" />
+            </div>
+          </button>
+          
+          {accountMenuOpen && (
+            <div className="account-dropdown">
+              <div className="account-dropdown-content">
+                <ul>
+                  <li className="dropdown-header">Account</li>
+                  <li><Link to="/signup">Sign up</Link></li>
+                  <li><Link to="/login">Log in</Link></li>
+                  <li className="divider"></li>
+                  <li><Link to="/host">Host your home</Link></li>
+                  <li><Link to="/host-experience">Host an experience</Link></li>
+                  <li><Link to="/help">Help</Link></li>
+                </ul>
+              </div>
+            </div>
+          )}
+        </div>
 
-      {menuOpen && (
-        <div className="close-menu active" onClick={toggleMenu}>
+        {/* Mobile menu button (only visible on small screens) */}
+        <div className="hamburger-menu" onClick={toggleMenu}>
+          <div className="bar"></div>
           <div className="bar"></div>
           <div className="bar"></div>
         </div>
-      )}
+
+        {menuOpen && (
+          <div className="close-menu active" onClick={toggleMenu}>
+            <div className="bar"></div>
+            <div className="bar"></div>
+          </div>
+        )}
+      </div>
     </header>
   );
 };
