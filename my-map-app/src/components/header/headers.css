@@ -28,7 +28,7 @@
 }
 .searchButton{
     overflow: hidden;
-    border-radius: 0 10px 10px 0;
+    border-radius: 0 40px 40px 0;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -69,7 +69,7 @@ a {
 input {
     padding: 10px 15px;
     border: 1px solid #ced4da;
-    border-radius: 10px 0 0 10px;
+    border-radius: 40px 0 0 40px;
     font-size: 16px;
     width: 100%;
     height: 40px;
@@ -125,9 +125,7 @@ input {
     transition: box-shadow 0.2s ease;
 }
 
-.account-button:hover {
-    box-shadow: 0 2px 4px rgba(255, 0, 0, 0.18);
-}
+
 
 .account-button-content {
     display: flex;
