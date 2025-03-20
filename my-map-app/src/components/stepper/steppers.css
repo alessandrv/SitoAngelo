@@ -27,13 +27,25 @@
   
   .stepper::before,
   .stepper::after {
-    z-index: -1;
     content: '';
     position: absolute;
-    width: 200px;
-    height: 200px;
-    background-color: #007bff;
+    width: 100px;
+    height: 100px;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.6), rgba(255, 0, 0, 0.3));
     border-radius: 50%;
+    box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.1);
+  }
+  
+  .stepper::before {
+    bottom: 20px;
+    left: 40px;
+    transform: rotate(45deg);
+  }
+  
+  .stepper::after {
+    top: 60px;
+    right: 40px;
+    transform: rotate(-45deg);
   }
 
   .stepper::before {
@@ -163,4 +175,39 @@
     font-size: 16px;
   }
   
+
+  .line {
+    position: absolute;
+    background: #007bff; /* Colore delle linee */
+    opacity: 0.7; /* Leggermente trasparenti per un effetto più sottile */
+    z-index: 1;
+  }
+  
+  .line1 {
+    width: 3px;
+    height: 100%;
+    top: 50%;
+    left: 10%;
+    transform: rotate(45deg);
+    animation: lineMove1 3s ease-in-out infinite;
+  }
+  
+  .line2 {
+    width: 3px;
+    height: 100vh;
+    top: -5%;
+    right: 50%;
+    transform: rotate(-30deg);
+    animation: lineMove2 4s ease-in-out infinite;
+  }
+  
+  .line3 {
+    width: 3px;
+    height: 500px;
+    top: 10%;
+    right: 10%;
+    transform: rotate(135deg);
+    animation: lineMove3 5s ease-in-out infinite;
+  }
+
   
