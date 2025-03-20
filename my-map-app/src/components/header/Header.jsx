@@ -211,19 +211,9 @@ const Header = ({ onSearch, onLocationSelect }) => {
           )}
         </div>
 
-        {/* Mobile menu button (only visible on small screens) */}
-        <div className="hamburger-menu" onClick={toggleMenu}>
-          <div className="bar"></div>
-          <div className="bar"></div>
-          <div className="bar"></div>
-        </div>
+       
 
-        {menuOpen && (
-          <div className="close-menu active" onClick={toggleMenu}>
-            <div className="bar"></div>
-            <div className="bar"></div>
-          </div>
-        )}
+       
       </div>
     </header>
   );
