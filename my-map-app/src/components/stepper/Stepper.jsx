@@ -12,9 +12,10 @@ export default function Stepper({
   backButtonText = "Previous",
   nextButtonText = "Next",
   finishButtonText = "Finish",
-  onClose = () => {}
+  onClose = () => {},
 }) {
   const [currentStep, setCurrentStep] = useState(initialStep);
+  const [isFormSubmitted, setIsFormSubmitted] = useState(false);
   const stepsArray = React.Children.toArray(children);
   const totalSteps = stepsArray.length;
   const isLastStep = currentStep === totalSteps;
@@ -43,7 +44,12 @@ export default function Stepper({
   };
 
   const handleFinish = () => {
+    setIsFormSubmitted(true);
     console.log("Stepper Completed!");
+
+    setTimeout(() => {
+        setIsFormSubmitted(false);
+      }, 3000);
   };
 
   return (
@@ -51,12 +57,9 @@ export default function Stepper({
       <div className="stepper-overlay"></div>
 
       <div className="stepper">
-        <div className="step-content">
-          {stepsArray[currentStep - 1]}
-        </div>
+        <div className="step-content">{stepsArray[currentStep - 1]}</div>
 
         <div className="stepper-footer">
-
           <div className="stepper-nav">
             <button
               onClick={handleBack}
@@ -66,19 +69,27 @@ export default function Stepper({
               {backButtonText}
             </button>
             <div className="step-indicators">
-            {Array.from({ length: totalSteps }).map((_, index) => (
-              <div
-                key={index}
-                className={`step-indicator ${currentStep === index + 1 ? 'active' : ''}`}
-              >
-                {index + 1}
-              </div>
-            ))}
-          </div>
+              {Array.from({ length: totalSteps }).map((_, index) => (
+                <div
+                  key={index}
+                  className={`step-indicator ${
+                    currentStep === index + 1 ? "active" : ""
+                  }`}
+                >
+                  {index + 1}
+                </div>
+              ))}
+            </div>
             {isLastStep ? (
-              <button onClick={handleFinish} className="finish-button">
-                {finishButtonText}
-              </button>
+              isFormSubmitted ? (
+                <div className="success-message">
+                  <h2>Form inviato con successo!</h2>
+                </div>
+              ) : (
+                <button onClick={handleFinish} className="finish-button">
+                  {finishButtonText}
+                </button>
+              )
             ) : (
               <button onClick={handleNext} className="next-button">
                 {nextButtonText}

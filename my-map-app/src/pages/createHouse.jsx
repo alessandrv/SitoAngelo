@@ -1,19 +1,28 @@
 import React, { useState, useEffect } from "react";
 import Stepper, { Step } from "../components/stepper/Stepper";
-import casa1 from "../images/casa1.jpg";
-import { FaHome } from "react-icons/fa";
-import { MdAddPhotoAlternate } from "react-icons/md";
-import { GiCash } from "react-icons/gi";
-import { MdOutlineVisibility } from "react-icons/md";
+import {
+  MapContainer,
+  TileLayer,
+  Marker,
+  Popup,
+  useMap,
+  useMapEvents,
+} from "react-leaflet";
+import L from "leaflet";
+import "leaflet/dist/leaflet.css";
 import { MdClose } from "react-icons/md";
 import "./createHouses.css";
+import { FaSearch } from "react-icons/fa";
 
 const CreateHouse = () => {
   const [name, setName] = useState("");
   const [lastName, setLastName] = useState("");
+  const [address, setAddress] = useState("");
+  const [houseNumber, setHouseNumber] = useState("");
   const [email, setEmail] = useState("");
   const [city, setCity] = useState("");
   const [state, setState] = useState("");
+  const [country, setCountry] = useState("");
   const [zip, setZip] = useState("");
   const [price, setPrice] = useState("");
   const [bedrooms, setBedrooms] = useState("");
@@ -21,15 +30,23 @@ const CreateHouse = () => {
   const [sqft, setSqft] = useState("");
   const [description, setDescription] = useState("");
   const [images, setImages] = useState([]);
+  const [position, setPosition] = useState([37.7749, -122.4194]);
+  const [search, setSearch] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
+  const [isSearching, setIsSearching] = useState(false);
+  const [currentStep, setCurrentStep] = useState(1);
 
   useEffect(() => {
     const savedData = JSON.parse(localStorage.getItem("houseForm"));
     if (savedData) {
       setName(savedData.name || "");
       setLastName(savedData.lastName || "");
+      setAddress(savedData.address || "");
+      setHouseNumber(savedData.houseNumber || "");
       setEmail(savedData.email || "");
       setCity(savedData.city || "");
       setState(savedData.state || "");
+      setCountry(savedData.country || "");
       setZip(savedData.zip || "");
       setPrice(savedData.price || "");
       setBedrooms(savedData.bedrooms || "");
@@ -44,9 +61,12 @@ const CreateHouse = () => {
     const formData = {
       name,
       lastName,
+      address,
+      houseNumber,
       email,
       city,
       state,
+      country,
       zip,
       price,
       bedrooms,
@@ -68,67 +88,228 @@ const CreateHouse = () => {
     setImages(images.filter((_, i) => i !== index));
   };
 
+  const handleStepChange = (step) => {
+    setCurrentStep(step);
+  };
+  
+
+  const userLocationIcon = L.icon({
+    iconUrl: "https://img.icons8.com/color/48/000000/marker--v1.png",
+    iconSize: [32, 32],
+    iconAnchor: [16, 32],
+    popupAnchor: [0, -32],
+  });
+
+  // Funzione per geocodifica inversa con OpenCage API
+  const geocodeAddress = (lat, lng, setName, setCity, setState, setZip) => {
+    fetch(
+      `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&addressdetails=1`
+    )
+      .then((response) => response.json())
+      .then((result) => {
+        const address = result.address;
+        setAddress(address.road || "");
+        setHouseNumber(address.house_number || "");
+        setCity(address.city || address.town || "");
+        setState(address.state || "");
+        setZip(address.postcode || "");
+        setCountry(address.country || "");
+      })
+      .catch((error) => console.error("Geocoding error:", error));
+  };
+
+  const searchLocation = async (search, setSearchResults, setIsSearching) => {
+    if (!search.trim() || search.trim().length < 3) {
+      setSearchResults([]);
+      return;
+    }
+
+    setIsSearching(true);
+
+    try {
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
+          search
+        )}&limit=5`
+      );
+      const data = await response.json();
+      setSearchResults(data);
+    } catch (error) {
+      console.error("Error searching for location:", error);
+      alert("Failed to search for location. Please try again.");
+    } finally {
+      setIsSearching(false);
+    }
+  };
+
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(() => {
+      searchLocation(search, setSearchResults, setIsSearching);
+    }, 500);
+
+    return () => clearTimeout(delayDebounceFn);
+  }, [search]);
+
+  const handleSearchClick = (e) => {
+    e.preventDefault();
+    searchLocation(search, setSearchResults, setIsSearching);
+
+    if (searchResults.length === 1 && !isSearching) {
+      selectLocation(searchResults[0]);
+    }
+  };
+
+  const selectLocation = (result) => {
+    setSearchResults([]);
+    setSearch(result.display_name);
+  
+    const lat = result.lat;
+    const lng = result.lon;
+  
+    setPosition([lat, lng]);
+  
+    geocodeAddress(lat, lng, setAddress, setCity, setState, setZip);
+  
+    handleStepChange(1);
+  };
+  
+
+  const handleMapClick = (event) => {
+    const { lat, lng } = event.latlng;
+    setPosition([lat, lng]);
+    geocodeAddress(lat, lng, setAddress, setCity, setState, setZip);
+  };
+
   return (
     <div>
       <div className="stepper-container">
         <Stepper
           initialStep={1}
-          onStepChange={(step) => saveToLocalStorage()}
+          onStepChange={handleStepChange}
           onFinalStepCompleted={() => saveToLocalStorage()}
           backButtonText="Previous"
           nextButtonText="Next"
         >
           <Step>
             <h2 className="mainRecup">Informazioni Personali</h2>
-            <form className="form">
-              <input
-                type="text"
-                placeholder="First Name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                className="formHouse"
-              />
-              <input
-                type="text"
-                placeholder="Last Name"
-                value={lastName}
-                onChange={(e) => setLastName(e.target.value)}
-                className="formHouse"
-              />
-              <input
-                type="email"
-                placeholder="Email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="formHouse"
-              />
-              <input
-                type="text"
-                placeholder="City"
-                value={city}
-                onChange={(e) => setCity(e.target.value)}
-                className="formHouse"
-              />
-              <input
-                type="text"
-                placeholder="State"
-                value={state}
-                onChange={(e) => setState(e.target.value)}
-                className="formHouse"
-              />
-              <input
-                type="text"
-                placeholder="Zip"
-                value={zip}
-                onChange={(e) => setZip(e.target.value)}
-                className="formHouse"
-              />
-            </form>
+            <div className="step-map">
+              <div className="map-search">
+                {/* Barra di ricerca */}
+                <div>
+                  <input
+                    type="text"
+                    placeholder="Search for address..."
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                  />
+                  <button onClick={handleSearchClick} disabled={isSearching}>
+                    <FaSearch />
+                  </button>
+                </div>
+
+                {/* Mostra i risultati della ricerca */}
+                <div>
+                  {isSearching && <p>Searching...</p>}
+                  {searchResults.length > 0 && (
+                    <div className="search-results-dropdown">
+                      <ul>
+                        {searchResults.map((result) => (
+                          <li
+                            key={result.place_id}
+                            onClick={() => selectLocation(result)}
+                          >
+                            {result.display_name}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </div>
+
+                {/* Mappa Leaflet */}
+                <MapContainer
+                  center={position}
+                  zoom={13}
+                  style={{ height: "400px", width: "100%" }}
+                  onClick={handleMapClick} // Ascolta i click sulla mappa
+                >
+                  <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+                  <Marker position={position} icon={userLocationIcon}>
+                    <Popup>Your selected location</Popup>
+                  </Marker>
+                </MapContainer>
+              </div>
+              <form className="form">
+                <input
+                  type="text"
+                  placeholder="First Name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  className="formHouse"
+                />
+                <input
+                  type="text"
+                  placeholder="Last Name"
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
+                  className="formHouse"
+                />
+                <input
+                  type="text"
+                  placeholder="Address"
+                  value={address}
+                  onChange={(e) => setAddress(e.target.value)}
+                  className="formHouse"
+                />
+                <input
+                  type="text"
+                  placeholder="House Number"
+                  value={houseNumber}
+                  onChange={(e) => setHouseNumber(e.target.value)}
+                  className="formHouse"
+                />
+                <input
+                  type="email"
+                  placeholder="Email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="formHouse"
+                />
+                <input
+                  type="text"
+                  placeholder="City"
+                  value={city}
+                  onChange={(e) => setCity(e.target.value)}
+                  className="formHouse"
+                />
+                <input
+                  type="text"
+                  placeholder="State"
+                  value={state}
+                  onChange={(e) => setState(e.target.value)}
+                  className="formHouse"
+                />
+                <input
+                  type="text"
+                  placeholder="Country"
+                  value={country}
+                  onChange={(e) => setCountry(e.target.value)}
+                  className="formHouse"
+                />
+                <input
+                  type="text"
+                  placeholder="Zip"
+                  value={zip}
+                  onChange={(e) => setZip(e.target.value)}
+                  className="formHouse"
+                />
+              </form>
+            </div>
           </Step>
 
           <Step>
             <h2 className="mainRecup">Informazioni sulla casa</h2>
-            <form className="form">
+            <form className="form-house">
               <input
                 type="text"
                 placeholder="Price"
@@ -164,7 +345,12 @@ const CreateHouse = () => {
                 onChange={(e) => setDescription(e.target.value)}
                 className="formHouse"
               />
+            </form>
+          </Step>
 
+          <Step>
+          <h2 className="mainRecup">MOSTRACI LA TUA CASA!</h2>
+              <div className="button-file">
               <input
                 type="file"
                 accept="image/*"
@@ -176,11 +362,12 @@ const CreateHouse = () => {
               <label htmlFor="file-input" className="custom-file-button">
                 Scegli le immagini
               </label>
+              </div>
 
               <div>
                 {images.length > 0 && (
                   <>
-                    <h3>Anteprima delle immagini:</h3>
+                    <h3 className="mainRecup">Anteprima delle immagini:</h3>
                     <div className="image-preview-container">
                       {images.map((image, index) => (
                         <div key={index} className="image-preview-item">
@@ -199,30 +386,30 @@ const CreateHouse = () => {
                   </>
                 )}
               </div>
-            </form>
           </Step>
 
           <Step>
             <h2 className="mainRecup">Recap</h2>
-            <p className="recupText2">Ecco cosa hai inserito:</p>
-            <div className="form">
+            <p className="recupText">Ecco cosa hai inserito:</p>
+            <div className="form-house">
               <h3 className="titleRecup">Informazioni Personali</h3>
-                <div className="recupPersonal">
+              <div className="recupPersonal">
                 <p className="recupText">
-                Nome: {name} {lastName}
-              </p>
-              <p className="recupText">Email: {email}</p>
-              <p className="recupText">Città: {city}</p>
-              <p className="recupText">Stato: {state}</p>
-              <p className="recupText">CAP: {zip}</p>
-                </div>
-                <h3 className="titleRecup">Informazioni sulla Casa</h3>
+                  Nome: {name} {lastName}</p>
+                <p className="recupText">Indirizzo: {address} {houseNumber}</p> 
+                <p className="recupText">Email: {email}</p>
+                <p className="recupText">Città: {city}</p>
+                <p className="recupText">Stato: {state}</p>
+                <p className="recupText">Paese: {country}</p>
+                <p className="recupText">CAP: {zip}</p>
+              </div>
+              <h3 className="titleRecup">Informazioni sulla Casa</h3>
               <div className="recupHouse">
-              <p className="recupText">Prezzo: {price}</p>
-              <p className="recupText">Camere da letto: {bedrooms}</p>
-              <p className="recupText">Bagni: {bathrooms}</p>
-              <p className="recupText">Superficie (Sqft): {sqft}</p>
-              <p className="recupText">Descrizione: {description}</p>
+                <p className="recupText">Prezzo: {price}</p>
+                <p className="recupText">Camere da letto: {bedrooms}</p>
+                <p className="recupText">Bagni: {bathrooms}</p>
+                <p className="recupText">Superficie (Sqft): {sqft}</p>
+                <p className="recupText">Descrizione: {description}</p>
               </div>
               <h3 className="titleRecup">Immagini Caricate</h3>
               {images.length > 0 ? (

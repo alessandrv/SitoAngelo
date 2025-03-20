@@ -11,9 +11,36 @@
     width: 100%; /* Occupa tutta la larghezza della pagina */
   }
 
+  .step-map{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+    gap: 20px;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    background-color: white;
+  }
+
   .form{
     display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    max-width: 50%;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    background-color: white;
+  }
+
+  .form-house{
+    display: flex;
     flex-direction: column;
+    flex-wrap: wrap;
     justify-content: center;
     align-items: center;
     gap: 20px;
@@ -58,7 +85,6 @@
     justify-content: center;
     align-items: center;
     flex-wrap: wrap;
-    max-width: 500px;
     gap: 20px;
     margin-bottom: 40px;
   }
@@ -72,8 +98,15 @@
   }
 
   .image-preview-img{
-    max-width: 100px;
+    max-width: 250px;
     border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  }
+
+  .button-file{
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   .delete-icon{
@@ -199,6 +232,52 @@
   .formHouse > h13{
     font-size: 0.00625rem;
     font-weight: 500;
-    color:
+    color: #495057
 }
+
+/* Contenitore dei risultati di ricerca */
+.search-results-dropdown {
+    position: absolute;
+    top: 40%; /* Posiziona la lista subito sotto il campo di ricerca */
+    left: 0;
+    width: 40%;
+    max-height: 300px; /* Imposta un'altezza massima per la lista */
+    overflow-y: auto; /* Aggiungi uno scroll se ci sono troppi risultati */
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 9999999999; /* Assicura che la lista si sovrapponga agli altri contenuti */
+    padding: 10px 0;
+    margin-top: 5px;
+  }
+  
+  /* Stile per ogni singolo risultato */
+  .search-results-dropdown ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .search-results-dropdown li {
+    padding: 8px 15px;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+    font-size: 14px;
+    color: #333;
+  }
+  
+  /* Cambia colore quando si passa sopra un risultato */
+  .search-results-dropdown li:hover {
+    background-color: #f5f5f5;
+    color: #007bff; /* Colore per il testo al passaggio del mouse */
+  }
+  
+  /* Testo di caricamento */
+  .search-results-dropdown p {
+    font-size: 14px;
+    color: #999;
+    padding: 10px;
+    text-align: center;
+  }
   
