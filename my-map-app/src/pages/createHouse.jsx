@@ -184,7 +184,7 @@ const CreateHouse = () => {
             <div className="step-map">
               <div className="map-search">
                 {/* Barra di ricerca */}
-                <div>
+                <div className="search-bar-form">
                   <input
                     type="text"
                     placeholder="Search for address..."
@@ -350,7 +350,7 @@ const CreateHouse = () => {
                 multiple
                 style={{ display: "none" }}
               />
-              <label htmlFor="file-input" className="custom-file-button">
+              <label htmlFor="file-input" className="file-upload-button">
                 Scegli le immagini
               </label>
             </div>
