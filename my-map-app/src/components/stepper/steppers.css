@@ -25,40 +25,6 @@
     position: relative;
   }
   
-  .stepper::before,
-  .stepper::after {
-    content: '';
-    position: absolute;
-    width: 100px;
-    height: 100px;
-    background: radial-gradient(circle, rgba(255, 255, 255, 0.6), rgba(255, 0, 0, 0.3));
-    border-radius: 50%;
-    box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.1);
-  }
-  
-  .stepper::before {
-    bottom: 20px;
-    left: 40px;
-    transform: rotate(45deg);
-  }
-  
-  .stepper::after {
-    top: 60px;
-    right: 40px;
-    transform: rotate(-45deg);
-  }
-
-  .stepper::before {
-    bottom: -15px;
-    left: -15px;
-  }
-  
-  .stepper::after {
-    top: -30px;
-    right: -30px;
-  }
-  
-  
   .step-content {
     margin-bottom: 2rem;
   }

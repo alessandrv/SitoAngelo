@@ -157,11 +157,34 @@
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
   }
 
-  .button-file{
+  .button-file {
+    position: relative;
+    border: 2px dashed #007bff;
+    border-radius: 8px;
     display: flex;
     justify-content: center;
     align-items: center;
+    padding: 20px;
+    background-color: #f9f9f9;
+    transition: background-color 0.3s ease;
   }
+  
+  .button-file label {
+    cursor: pointer;
+  }
+
+  .button-file.drag-over {
+    background-color: #e9f7fd;
+    border-color: #0056b3;
+    cursor: pointer;
+  }
+  
+  
+  .button-file p {
+    font-size: 1rem;
+    color: #495057;
+  }
+  
 
   .delete-icon{
     cursor: pointer;
@@ -428,14 +451,6 @@
   margin-bottom: 8px;
   color: #555;
   display: block;
-}
-
-.file-upload-button{
-  padding: 20px;
-  background-color: white;
-  cursor: pointer;
-  border: 3px solid #3498db;
-  border-radius: 8px;
 }
 
   

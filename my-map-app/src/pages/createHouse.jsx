@@ -32,6 +32,7 @@ const CreateHouse = () => {
   const [searchResults, setSearchResults] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
+  const [isDragging, setIsDragging] = useState(false);
 
   useEffect(() => {
     const savedData = JSON.parse(localStorage.getItem("houseForm"));
@@ -70,9 +71,29 @@ const CreateHouse = () => {
   };
 
   const handleImageChange = (e) => {
-    const files = Array.from(e.target.files);
-    const imageURLs = files.map((file) => URL.createObjectURL(file));
+    const files = e.target.files;
+    const imageURLs = Array.from(files).map((file) => URL.createObjectURL(file));
     setImages((prevImages) => [...prevImages, ...imageURLs]);
+  };
+
+  // Gestisce l'evento quando un file viene rilasciato (drag and drop)
+  const handleDrop = (e) => {
+    e.preventDefault();
+    setIsDragging(false);
+    const files = e.dataTransfer.files;
+    const imageURLs = Array.from(files).map((file) => URL.createObjectURL(file));
+    setImages((prevImages) => [...prevImages, ...imageURLs]);
+  };
+
+  // Gestisce l'evento durante il trascinamento
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    setIsDragging(true); // Aggiungi la classe drag-over
+  };
+
+  // Gestisce l'evento quando il file esce dall'area di drag
+  const handleDragLeave = () => {
+    setIsDragging(false); // Rimuovi la classe drag-over
   };
 
   const handleDeleteImage = (index) => {
@@ -341,20 +362,28 @@ const CreateHouse = () => {
 
           <Step>
             <h2 className="mainRecup">MOSTRACI LA TUA CASA!</h2>
+            <div
+        onDrop={handleDrop}
+        onDragOver={handleDragOver}
+        onDragLeave={handleDragLeave}
+        className={isDragging ? "drag-over" : ""}
+      >
             <div className="button-file">
-              <input
-                type="file"
-                accept="image/*"
-                id="file-input"
-                onChange={handleImageChange}
-                multiple
-                style={{ display: "none" }}
-              />
-              <label htmlFor="file-input" className="file-upload-button">
-                Scegli le immagini
-              </label>
-            </div>
+      <input
+        type="file"
+        accept="image/*"
+        id="file-input"
+        onChange={handleImageChange}
+        style={{ display: "none" }}
+        multiple
+      />
+      <label htmlFor="file-input">       
 
+        <p>{isDragging ? "Rilascia le immagini qui!" : "Trascina le immagini qui"}</p>
+      </label>
+      </div> 
+    </div>
+  
             <div>
               {images.length > 0 && (
                 <>
