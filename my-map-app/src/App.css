@@ -9,6 +9,7 @@
   flex: 1;
   display: flex;
   overflow: hidden;
+  flex-direction: row;
   position: relative;
 }
 
@@ -53,13 +54,65 @@
   position: relative;
 }
 
+.toggle-map-btn {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 12px 20px;
+  background-color: #007BFF;
+  color: white;
+  border: none;
+  border-radius: 30px;
+  font-size: 16px;
+  cursor: pointer;
+  z-index: 10;
+  display: none;
+}
+
 /* Mobile responsive styles */
 @media (max-width: 768px) {
   .app {
     flex-direction: column;
+    width: 100vw;
+    height: 100vh;
   }
   
   .map-section {
-    height: 50%;
+    display: none;
+    visibility: hidden;
   }
+
+  .toggle-map-btn {
+    display: block;
+    z-index: 999999;
+  }
+
+  .map-section.visible {
+    display: block;
+    visibility: visible;
+  }
+
+.hidden {
+  display: none;
+}
+
+.visible {
+  display: block;
+}
+
+.map-section.visible {
+  visibility: visible;
+  opacity: 1;
+}
+
+.map-section.hidden {
+  visibility: hidden;
+  opacity: 0;
+}
+
+.ListingSidebar.hidden {
+  display: none;
+}
+
 } 

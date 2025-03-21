@@ -176,4 +176,22 @@
     animation: lineMove3 5s ease-in-out infinite;
   }
 
+
+  @media (max-width: 768px) {
+
+    .stepper{
+      width: auto;
+      height: 100vh;
+      overflow-y: auto;
+    }
+
+    .stepper-nav {
+      gap: 10px;
+    }
+
+    .stepper-container{
+      align-items: normal;
+    }
+
+  }
   

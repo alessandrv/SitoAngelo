@@ -10,6 +10,11 @@ function App() {
   const [activeListingId, setActiveListingId] = useState(null);
   const [selectedLocation, setSelectedLocation] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const [mapVisible, setMapVisible] = useState(false);
+
+  const toggleMapVisibility = () => {
+    setMapVisible((prevState) => !prevState);
+  };
 
   // Handle listings changing from map component
   const handleListingsChange = (newListings) => {
@@ -38,18 +43,23 @@ function App() {
 
   return (
     <div className="app-container">
-      <Header 
+      <Header
         onSearch={handleHeaderSearch}
         onLocationSelect={handleLocationSelect}
       />
       <div className="app">
+        {/* Sidebar is hidden when mapVisible is true */}
+        <div className={`sidebar ${mapVisible ? "hidden" : "visible"}`}>
         <ListingSidebar
           listings={listings}
           onListingHover={handleListingHover}
           onListingClick={handleListingClick}
           activeListingId={activeListingId}
         />
-        <div className="map-section">
+        </div>
+        
+        {/* Map section hidden or visible based on mapVisible */}
+        <div className={`map-section ${mapVisible ? "visible" : "hidden"}`}>
           <MapComponent
             onListingsChange={handleListingsChange}
             hoveredListingId={hoveredListingId}
@@ -59,6 +69,11 @@ function App() {
           />
         </div>
       </div>
+
+      {/* Button to toggle map visibility */}
+      <button className="toggle-map-btn" onClick={toggleMapVisibility}>
+        {mapVisible ? "Nascondi Mappa" : "Mostra Mappa"}
+      </button>
     </div>
   );
 }

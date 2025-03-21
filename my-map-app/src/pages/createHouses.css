@@ -447,4 +447,71 @@
   display: block;
 }
 
+
+@media (max-width: 768px) {
+  .mainRecup{
+    margin-top: 0;
+    font-size: 2rem;
+  }
+
+  .titleRecup{
+    font-size: 1.2rem;
+    
+  }
+
+  .step-map{
+    flex-direction: column-reverse;
+    position: absolute;
+    top: 12%;
+    left: 0;
+    right: 0;
+    overflow-y:visible;
+    gap: 0;
+  }
+
+  .map{
+    margin-top: 10px;
+    height: 250px;
+    width: 250px;
+    border-radius: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    left: 20%;
+    
+  }
+
+  .form{
+    overflow-y:visible;
+    background-color: transparent;
+  }
+
+  .formHouse{
+    padding: 0;
+  }
+
+  .coupleDiv{
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .image-preview-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 40px;
+  }
+
+  .form-house{
+    position: absolute;
+    top: 8%;
+    left: 10%;
+    right: 0;
+  }
+
+  .button-file{
+    position: fixed;
+    top: 20%;
+    left: 22%;
+  }
+
+}
   
