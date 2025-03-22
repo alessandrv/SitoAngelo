@@ -480,7 +480,7 @@ const CreateHouse = () => {
         onDragLeave={handleDragLeave}
         className={isDragging ? "drag-over" : ""}
       >
-            <div className="button-file">
+            <div className={`button-file ${images.length > 0 ? "images-loaded" : ""}`}>
       <input
         type="file"
         accept="image/*"
@@ -496,7 +496,7 @@ const CreateHouse = () => {
       </div> 
     </div>
   
-            <div>
+            <div className="images-container">
               {images.length > 0 && (
                 <>
                   <h3 className="titleRecup">Anteprima delle immagini:</h3>
@@ -547,6 +547,7 @@ const CreateHouse = () => {
                   </div>
                 </div>
               </div>
+              <div className="images-container">
               <h3 className="titleRecup">Immagini Caricate</h3>
               {images.length > 0 ? (
                 <div className="image-preview-container">
@@ -567,6 +568,7 @@ const CreateHouse = () => {
               ) : (
                 <p className="recupText">Nessuna immagine caricata</p>
               )}
+              </div>
             </div>
           </Step>
         </Stepper>

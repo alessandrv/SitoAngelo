@@ -39,7 +39,7 @@
 }
 
 .map-toggle button.active {
-  background-color: #007bff;
+  background-color: #d1b502;
   color: white;
   font-weight: bold;
 }
@@ -60,7 +60,7 @@
   left: 50%;
   transform: translateX(-50%);
   padding: 12px 20px;
-  background-color: #007BFF;
+  background-color: #d1b502;
   color: white;
   border: none;
   border-radius: 30px;

@@ -151,6 +151,7 @@
 
 .image-preview-img{
   max-width: 150px;
+  max-height: 150px;
   border-radius: 8px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
@@ -456,7 +457,6 @@
 
   .titleRecup{
     font-size: 1.2rem;
-    
   }
 
   .step-map{
@@ -482,6 +482,7 @@
   .form{
     overflow-y:visible;
     background-color: transparent;
+    margin-bottom: 80px;
   }
 
   .formHouse{
@@ -491,6 +492,13 @@
   .coupleDiv{
     flex-direction: column;
     gap: 0;
+  }
+
+  .images-container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
   }
 
   .image-preview-container {
@@ -507,11 +515,23 @@
     right: 0;
   }
 
-  .button-file{
-    position: fixed;
-    top: 20%;
-    left: 22%;
-  }
+}
 
+@media (max-width: 915px) and (min-width: 769px) {
+  .images-loaded{
+    margin: 14rem 15px 0 15px;
+  }
+}
+
+@media (max-width: 768px) and (min-width: 667px) {
+  .images-loaded{
+    margin: 15rem 15px 0 15px;
+  }
+}
+
+@media (max-width: 667px) {
+  .images-loaded{
+    margin: 25rem 15px 0 15px;
+  }
 }
   
