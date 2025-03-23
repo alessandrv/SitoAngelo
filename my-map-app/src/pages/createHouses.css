@@ -55,9 +55,8 @@
 }
 
 .map{
-  margin-top: 10px;
-  height: 400px;
-  width: 400px;
+  height: 400px !important;
+  width: 400px !important;
   border-radius: 20px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
@@ -151,7 +150,6 @@
 
 .image-preview-img{
   max-width: 150px;
-  max-height: 150px;
   border-radius: 8px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
@@ -376,18 +374,16 @@
 
 .search-results-dropdown {
   position: absolute;
-  top: 40%;
-  left: 0;
-  width: 40%;
+
   max-height: 300px;
-  overflow-y: auto;
+  overflow: hidden;
+  width: 100%;
   background-color: white;
   border: 1px solid #ddd;
   border-radius: 5px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   z-index: 9999999999;
   padding: 10px 0;
-  margin-top: 5px;
 }
 
 .search-results-dropdown ul {
@@ -448,90 +444,4 @@
   display: block;
 }
 
-
-@media (max-width: 768px) {
-  .mainRecup{
-    margin-top: 0;
-    font-size: 2rem;
-  }
-
-  .titleRecup{
-    font-size: 1.2rem;
-  }
-
-  .step-map{
-    flex-direction: column-reverse;
-    position: absolute;
-    top: 12%;
-    left: 0;
-    right: 0;
-    overflow-y:visible;
-    gap: 0;
-  }
-
-  .map{
-    margin-top: 10px;
-    height: 250px;
-    width: 250px;
-    border-radius: 20px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    left: 20%;
-    
-  }
-
-  .form{
-    overflow-y:visible;
-    background-color: transparent;
-    margin-bottom: 80px;
-  }
-
-  .formHouse{
-    padding: 0;
-  }
-
-  .coupleDiv{
-    flex-direction: column;
-    gap: 0;
-  }
-
-  .images-container{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 20px;
-  }
-
-  .image-preview-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 40px;
-  }
-
-  .form-house{
-    position: absolute;
-    top: 8%;
-    left: 10%;
-    right: 0;
-  }
-
-}
-
-@media (max-width: 915px) and (min-width: 769px) {
-  .images-loaded{
-    margin: 14rem 15px 0 15px;
-  }
-}
-
-@media (max-width: 768px) and (min-width: 667px) {
-  .images-loaded{
-    margin: 15rem 15px 0 15px;
-  }
-}
-
-@media (max-width: 667px) {
-  .images-loaded{
-    margin: 25rem 15px 0 15px;
-  }
-}
   

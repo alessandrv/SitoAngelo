@@ -18,8 +18,8 @@ function fixLeafletIcon() {
   });
 }
 
-// Default coordinates (San Francisco)
-const defaultCoordinates = [37.7749, -122.4194];
+// Default coordinates (Center of Italy)
+const defaultCoordinates = [42.7, 12.8];
 
 // Create a custom house icon
 const createHouseIcon = (isActive = false) => {
@@ -41,6 +41,20 @@ const userLocationIcon = L.icon({
   iconAnchor: [16, 32],
   popupAnchor: [0, -32]
 });
+
+// Component to force map refresh when needed
+const MapRefresher = () => {
+  const map = useMap();
+  
+  useEffect(() => {
+    // Force a map refresh to fix mobile rendering issues
+    setTimeout(() => {
+      map.invalidateSize();
+    }, 200);
+  }, [map]);
+  
+  return null;
+};
 
 // Modified ChangeMapView to use smart zoom behavior
 const ChangeMapView = ({ center, shouldUpdate }) => {
@@ -250,33 +264,39 @@ const MapComponent = ({ onListingsChange, hoveredListingId, activeListingId, sea
   const [customMarkers, setCustomMarkers] = useState([
     {
       position: defaultCoordinates,
-      name: 'Beautiful Waterfront Home',
-      description: 'Gorgeous property with stunning views of the bay. Features 3 bedrooms, 2 bathrooms, and a modern kitchen.',
+      name: 'Historic Apartment in Centro Storico',
+      description: 'Beautiful apartment in the heart of Rome with stunning views of ancient architecture. Walking distance to the Colosseum and Pantheon.',
       id: 'default'
     },
     {
-      position: [37.7849, -122.4294],
-      name: 'Charming Victorian House',
-      description: 'Classic San Francisco Victorian home with original details. Located in a vibrant neighborhood with excellent restaurants.',
+      position: [43.7696, 11.2558],
+      name: 'Renaissance Villa in Florence',
+      description: 'Elegant Florentine villa with original Renaissance details. Located near the Duomo with a private garden and terrace.',
       id: 'house2'
     },
     {
-      position: [37.7649, -122.4094],
-      name: 'Modern Downtown Loft',
-      description: 'Sleek urban loft with high ceilings and floor-to-ceiling windows. Close to public transit and shopping.',
+      position: [45.4642, 9.1900],
+      name: 'Modern Loft in Milan',
+      description: 'Contemporary loft in Milan\'s fashion district. High ceilings, designer furnishings, and close to world-class shopping and dining.',
       id: 'house3'
     },
     {
-      position: [37.7650, -122.4095],
-      name: 'Downtown Luxury Condo',
-      description: 'Luxurious condominium in the heart of downtown with stunning city views and premium amenities.',
+      position: [45.4371, 12.3326],
+      name: 'Canal-side Apartment in Venice',
+      description: 'Charming apartment overlooking a quiet canal in Venice. Authentic Venetian decor with modern amenities and a water entrance.',
       id: 'house4'
     },
     {
-      position: [37.7651, -122.4093],
-      name: 'Urban Studio Apartment',
-      description: 'Chic studio apartment with modern design. Perfect for young professionals working downtown.',
+      position: [40.8518, 14.2681],
+      name: 'Coastal Villa in Naples',
+      description: 'Stunning villa with panoramic views of the Bay of Naples and Mount Vesuvius. Features a private pool and Mediterranean garden.',
       id: 'house5'
+    },
+    {
+      position: [38.1157, 13.3615],
+      name: 'Historic Palazzo in Palermo',
+      description: 'Restored historic palazzo in the heart of Palermo, Sicily. Featuring ornate Baroque details, high frescoed ceilings, and a central courtyard.',
+      id: 'house6'
     }
   ]);
   const [visibleMarkers, setVisibleMarkers] = useState([]);
@@ -286,6 +306,20 @@ const MapComponent = ({ onListingsChange, hoveredListingId, activeListingId, sea
   const [mapInstance, setMapInstance] = useState(null);
   const [collisionGroups, setCollisionGroups] = useState({});
   const [lastSelectedInGroup, setLastSelectedInGroup] = useState({});
+  
+  // Get user's location if available
+  useEffect(() => {
+    if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setUserLocation([position.coords.latitude, position.coords.longitude]);
+        },
+        (error) => {
+          console.warn("Error getting location:", error);
+        }
+      );
+    }
+  }, []);
 
   // Initialize the map reference
   const handleMapCreate = (map) => {
@@ -408,10 +442,12 @@ const MapComponent = ({ onListingsChange, hoveredListingId, activeListingId, sea
       <MapContainer
         ref={mapRef}
         center={center}
-        zoom={13}
+        zoom={5}
         style={{ width: '100%', height: '100%' }}
         whenCreated={handleMapCreate}
       >
+        {/* Add this component to ensure map is properly sized on mobile */}
+        <MapRefresher />
         <ChangeMapView center={center} shouldUpdate={shouldUpdateView} />
         <BoundsWatcher onBoundsChange={handleBoundsChange} markers={customMarkers} />
         

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import MapComponent from "./MapComponent";
 import ListingSidebar from "./ListingSidebar";
 import Header from "./components/header/Header";
@@ -11,32 +11,49 @@ function App() {
   const [selectedLocation, setSelectedLocation] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [mapVisible, setMapVisible] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkIfMobile = () => {
+      const mobile = window.innerWidth <= 768;
+      setIsMobile(mobile);
+      
+      if (!mobile) {
+        setMapVisible(false);
+      } else {
+        setMapVisible(true);
+      }
+    };
+    
+    checkIfMobile();
+    
+    window.addEventListener('resize', checkIfMobile);
+    
+    return () => {
+      window.removeEventListener('resize', checkIfMobile);
+    };
+  }, []);
 
   const toggleMapVisibility = () => {
     setMapVisible((prevState) => !prevState);
   };
 
-  // Handle listings changing from map component
   const handleListingsChange = (newListings) => {
     setListings(newListings);
   };
 
-  // Handle listing hover in sidebar
   const handleListingHover = (listingId) => {
     setHoveredListingId(listingId);
   };
 
-  // Handle listing click in sidebar
   const handleListingClick = (listing) => {
     setActiveListingId(listing.id);
   };
 
-  // Handle search from header
   const handleHeaderSearch = (query) => {
     setSearchQuery(query);
   };
 
-  // Handle location selection from header
   const handleLocationSelect = (center) => {
     setSelectedLocation(center);
   };
@@ -47,19 +64,17 @@ function App() {
         onSearch={handleHeaderSearch}
         onLocationSelect={handleLocationSelect}
       />
-      <div className="app">
-        {/* Sidebar is hidden when mapVisible is true */}
-        <div className={`sidebar ${mapVisible ? "hidden" : "visible"}`}>
-        <ListingSidebar
-          listings={listings}
-          onListingHover={handleListingHover}
-          onListingClick={handleListingClick}
-          activeListingId={activeListingId}
-        />
+      <div className={`app ${isMobile ? 'mobile-layout' : 'desktop-layout'}`}>
+        <div className={`sidebar ${isMobile && mapVisible ? "hidden" : "visible"}`}>
+          <ListingSidebar
+            listings={listings}
+            onListingHover={handleListingHover}
+            onListingClick={handleListingClick}
+            activeListingId={activeListingId}
+          />
         </div>
         
-        {/* Map section hidden or visible based on mapVisible */}
-        <div className={`map-section ${mapVisible ? "visible" : "hidden"}`}>
+        <div className={`map-section ${isMobile ? (mapVisible ? "visible" : "hidden") : "visible"}`}>
           <MapComponent
             onListingsChange={handleListingsChange}
             hoveredListingId={hoveredListingId}
@@ -70,9 +85,8 @@ function App() {
         </div>
       </div>
 
-      {/* Button to toggle map visibility */}
-      <button className="toggle-map-btn" onClick={toggleMapVisibility}>
-        {mapVisible ? "Nascondi Mappa" : "Mostra Mappa"}
+      <button className={`toggle-map-btn ${isMobile ? 'show-toggle' : ''}`} onClick={toggleMapVisibility}>
+        {mapVisible ? "View Listings" : "View Map"}
       </button>
     </div>
   );
