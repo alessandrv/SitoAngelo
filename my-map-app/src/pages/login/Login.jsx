@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "./login.css";
+import {Button, ButtonGroup} from "@heroui/button";
 
 function Login() {
   const [showLogin, setShowLogin] = useState(true);
@@ -38,7 +39,10 @@ function Login() {
               <input type="text" className="userLogin" placeholder="Username o Email" />
               <label htmlFor="password">Password</label>
               <input type="password" className="userLogin" placeholder="Password" />
-              <button className="buttonLogin">Accedi</button>
+              <ButtonGroup>
+                <Button>Accedi</Button>
+                <Button>Registrati</Button>
+              </ButtonGroup>
             </form>
           </div>
           <div className="containerCreateAccount">
