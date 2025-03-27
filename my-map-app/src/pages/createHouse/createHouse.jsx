@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import Stepper, { Step } from "../components/stepper/Stepper";
+import Stepper, { Step } from "../../components/stepper/Stepper";
 import {
   MapContainer,
   TileLayer,
