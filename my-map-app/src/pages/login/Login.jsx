@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "./login.css";
-import {Button, ButtonGroup} from "@heroui/button";
+import {Button, ButtonGroup,Form, Input} from "@heroui/react";
 
 function Login() {
   const [showLogin, setShowLogin] = useState(true);
@@ -9,6 +9,7 @@ function Login() {
   const [password, setPassword] = useState("");
   const [emailError, setEmailError] = useState("");
   const [passwordStrength, setPasswordStrength] = useState("");
+  const [action, setAction] = React.useState(null);
 
   const validateEmails = () => {
     if (email !== confirmEmail) {
@@ -34,16 +35,49 @@ function Login() {
         <div className="containerLogin">
           <div className="login">
             <h2 className="titleLogin">Accedi</h2>
-            <form className="formLogin">
-              <label htmlFor="username">Username o Email</label>
-              <input type="text" className="userLogin" placeholder="Username o Email" />
-              <label htmlFor="password">Password</label>
-              <input type="password" className="userLogin" placeholder="Password" />
-              <ButtonGroup>
-                <Button>Accedi</Button>
-                <Button>Registrati</Button>
-              </ButtonGroup>
-            </form>
+            <Form
+      className="w-full max-w-xs flex flex-col gap-4"
+      onReset={() => setAction("reset")}
+      onSubmit={(e) => {
+        e.preventDefault();
+        let data = Object.fromEntries(new FormData(e.currentTarget));
+
+        setAction(`submit ${JSON.stringify(data)}`);
+      }}
+    >
+      <Input
+        isRequired
+        errorMessage="Please enter a valid username"
+        label="Username"
+        labelPlacement="outside"
+        name="username"
+        placeholder="Enter your username"
+        type="text"
+      />
+
+      <Input
+        isRequired
+        errorMessage="Please enter a valid email"
+        label="Email"
+        labelPlacement="outside"
+        name="email"
+        placeholder="Enter your email"
+        type="email"
+      />
+      <div className="flex gap-2">
+        <Button color="primary" type="submit">
+          Submit
+        </Button>
+        <Button type="reset" variant="flat">
+          Reset
+        </Button>
+      </div>
+      {action && (
+        <div className="text-small text-default-500">
+          Action: <code>{action}</code>
+        </div>
+      )}
+    </Form>
           </div>
           <div className="containerCreateAccount">
             <p>Hai dimenticato la password?</p>
@@ -55,45 +89,7 @@ function Login() {
         <div className="containerRegister">
           <div className="register">
             <h2 className="titleRegister">Registrati</h2>
-            <form className="formRegister">
-              <label htmlFor="username">Username</label>
-              <input type="text" className="userLogin" placeholder="Username" />
-              <label htmlFor="email">Email</label>
-              <input
-                type="email"
-                className="userLogin"
-                placeholder="Email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-              <label htmlFor="confirmEmail">Conferma Email</label>
-              <input
-                type="email"
-                className="userLogin"
-                placeholder="Conferma Email"
-                value={confirmEmail}
-                onChange={(e) => setConfirmEmail(e.target.value)}
-                onBlur={validateEmails}
-              />
-              {emailError && <p className="error">{emailError}</p>}
-              <label htmlFor="password">Password</label>
-              <input
-                type="password"
-                className="userLogin"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => {
-                  setPassword(e.target.value);
-                  checkPasswordStrength(e.target.value);
-                }}
-              />
-              {password && <p className="passwordStrength">{passwordStrength}</p>}
-              <label htmlFor="repeatPassword">Ripeti Password</label>
-              <input type="password" className="userLogin" placeholder="Ripeti Password" />
-              <label htmlFor="tel">Telefono</label>
-              <input type="number" className="userLogin" placeholder="Telefono" />
-              <button className="buttonLogin">Registrati</button>
-            </form>
+          
           </div>
           <div>
             <p>Hai già un account?</p>
